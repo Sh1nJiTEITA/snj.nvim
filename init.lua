@@ -5,7 +5,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = true 
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -13,11 +13,11 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
-vim.opt.number = true
+-- vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
-
+vim.opt.relativenumber = true
+--
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
@@ -56,7 +56,7 @@ vim.opt.splitbelow = true
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-vim.opt.list = false 
+vim.opt.list = false
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
@@ -136,14 +136,11 @@ vim.opt.rtp:prepend(lazypath)
 --
 --  To update plugins you can run
 --    :Lazy update
-
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
 
-  {'nvim-tree/nvim-tree.lua'},
-
-
-
+  { 'nvim-tree/nvim-tree.lua' },
+  { 'Sh1nJiTEITA/nj1.nvim' },
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -157,7 +154,7 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',  opts = {} },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
@@ -192,7 +189,7 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
@@ -244,7 +241,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -343,11 +340,11 @@ require('lazy').setup({
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
-      { 'folke/neodev.nvim', opts = {} },
+      { 'folke/neodev.nvim',       opts = {} },
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -491,18 +488,31 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         clangd = {
-            cmd = { "clangd", "--background-index", "--clang-tidy", "--completion-style=detailed" },
-            -- on_attach = function(client, bufnr)
-            --   client.resolved_capabilities.signature_help = {
-            --     -- Добавьте параметры для активации подсказки с отложенной детализацией
-            --     trigger_characters = { "(", "," }
-            --   }
-            -- end,
+          cmd = { "clangd", "--background-index", "--clang-tidy", "--completion-style=detailed" },
+          -- on_attach = function(client, bufnr)
+          --   client.resolved_capabilities.signature_help = {
+          --     -- Добавьте параметры для активации подсказки с отложенной детализацией
+          --     trigger_characters = { "(", "," }
+          --   }
+          -- end,
 
         },
-    
+
+        glsl_analyzer = {
+          filetypes = { 'vert', 'frag', 'glsl', 'geom' },
+        },
+
+        --
+        -- glslls = {
+        --     cmd = { 'glslls' }, -- GLSL lsp executable from (https://github.com/svenstaro/glsl-language-server)
+        --     filetypes = {'glsl'},
+        --     -- root_dir = util.root_pattern('compile_commands.json', '.git'),
+        --     single_file_support = true,
+        --     -- capabilities = default_capabilities,
+        --
+        -- },
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -535,7 +545,8 @@ require('lazy').setup({
       --
       --  You can press `g?` for help in this menu.
       require('mason').setup()
-
+      -- require'lspconfig'.glsl_analyzer.setup{}
+      -- require'lspconfig'.glsl_analyzer.setup{}
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
@@ -553,12 +564,13 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+            -- require'lspconfig'.glsl_analyzer.setup{}
           end,
         },
       }
     end,
   },
-  
+
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
@@ -586,13 +598,23 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        cpp = { 'clang_format' },
+        c = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { "isort", "black" },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         -- javascript = { { "prettierd", "prettier" } },
       },
+      -- formatters = {
+      --   -- astyle = { -- Changed to use astyle formatter
+      --   --   args = { "--style=gnu", "--indent=spaces=3" }, -- Added --indent=spaces=3 argument for 3 spaces indentation
+      --   -- },
+      --   shfmt = {
+      --     prepend_args = { "-i", "3"},
+      --   },
+      -- },
     },
   },
 
@@ -706,7 +728,7 @@ require('lazy').setup({
       }
     end,
   },
-  
+
   -- {
   --   "catppuccin/nvim",
   --   lazy = true,
@@ -754,26 +776,31 @@ require('lazy').setup({
   --
   --   end
   -- },
-
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    --
-    -- 'morhetz/gruvbox',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- load the colorscheme here.
-      -- like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-moon'
-
-      -- vim.cmd.colorscheme 'gruvbox-dark'
-      -- you can configure highlights by doing something like:
-      vim.cmd.hi 'comment gui=none'
-    end,
+  --
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'folke/tokyonight.nvim',
+  --   --
+  --   -- 'morhetz/gruvbox',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   init = function()
+  --     -- load the colorscheme here.
+  --     -- like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --     vim.cmd.colorscheme 'tokyonight-moon'
+  --
+  --     -- vim.cmd.colorscheme 'gruvbox-dark'
+  --     -- you can configure highlights by doing something like:
+  --     vim.cmd.hi 'comment gui=none'
+  --   end,
+  -- },
+  {
+    'ellisonleao/gruvbox.nvim',
+    priority = 1000,
+    config = true,
   },
 
   -- Highlight todo, notes, etc in comments
@@ -893,7 +920,7 @@ require('lazy').setup({
   },
 })
 
--- nvim-tree 
+-- nvim-tree
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
@@ -919,7 +946,7 @@ require("nvim-tree").setup()
 --   },
 -- })
 -- api.tree.remove_keymap('<C-t>')
-on_attach = function(bufnr) 
+on_attach = function(bufnr)
   -- local api = require "nvim-tree.api"
   --
   -- local function opts(desc)
@@ -929,22 +956,27 @@ on_attach = function(bufnr)
   -- api.config.mappings.default_on_attach(bufnr)
   -- api.config.mappings.remove_keymap('<C-t>')
   -- default mappings
-  
-  api.config.mappings.default_on_attach(bufnr) 
 
-  vim.keymap.set('n', '<C-T>', '', { buffer = bufnr }) 
-  vim.keymap.del('n', '<C-T>', { buffer = bufnr }) 
-  vim.keymap.set('n', '<tab>', '', { buffer = bufnr }) 
-  vim.keymap.del('n', '<tab>', { buffer = bufnr }) 
+  api.config.mappings.default_on_attach(bufnr)
 
-  
+  vim.keymap.set('n', '<C-T>', '', { buffer = bufnr })
+  vim.keymap.del('n', '<C-T>', { buffer = bufnr })
+  vim.keymap.set('n', '<tab>', '', { buffer = bufnr })
+  vim.keymap.del('n', '<tab>', { buffer = bufnr })
+
+
 
   -- custom mappings
 end
 
-vim.api.nvim_set_keymap('n', '<C-t>', ':NvimTreeToggle()<CR>', {noremap = true, silent = true})
+-- require'lspconfig'.glsl_analyzer.setup{
+--     filetypes = {'vert', 'glsl', 'frag', 'geom'},
+-- }
+vim.api.nvim_set_keymap('n', '<C-t>', ':NvimTreeToggle()<CR>', { noremap = true, silent = true })
 
-
+vim.o.background = "dark" -- or "light" for light mode
+vim.cmd([[colorscheme gruvbox]])
+-- require'lspconfig'.glsl_analyzer.setup{}
 
 -- local function my_on_attach(bufnr)
 --   local api = require "nvim-tree.api"
