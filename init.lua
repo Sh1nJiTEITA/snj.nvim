@@ -13,7 +13,7 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
--- vim.opt.number = true
+vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
@@ -140,7 +140,24 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
 
   { 'nvim-tree/nvim-tree.lua' },
-  { 'Sh1nJiTEITA/nj1.nvim' },
+
+  {
+    'goolord/alpha-nvim',
+    config = function ()
+      require'alpha'.setup(require'alpha.themes.startify'.config)
+    end
+  },
+  { 'xiyaowong/transparent.nvim' },
+  {
+    'Sh1nJiTEITA/nj1.nvim',
+    opts = {
+      name = 'sNj'
+    }
+  },
+  -- {
+  --   'm4xshen/example.nvim',
+  --   opts = {}
+  -- },
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
