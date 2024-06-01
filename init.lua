@@ -518,7 +518,10 @@ require('lazy').setup({
         glsl_analyzer = {
           filetypes = { 'vert', 'frag', 'glsl', 'geom' },
         },
+        
 
+        cmakelang = {},
+        cmake = {},
         --
         -- glslls = {
         --     cmd = { 'glslls' }, -- GLSL lsp executable from (https://github.com/svenstaro/glsl-language-server)
