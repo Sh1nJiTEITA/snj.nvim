@@ -13,7 +13,7 @@ vim.opt.breakindent = true
 vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "no"
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
 vim.opt.splitright = true
@@ -24,5 +24,9 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 vim.opt.hlsearch = true
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.opt.termguicolors = true
 
 return
