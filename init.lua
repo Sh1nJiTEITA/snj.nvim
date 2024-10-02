@@ -22,7 +22,15 @@ require("lazy").setup({
 
    { "tpope/vim-sleuth" },
 
-   { "numToStr/Comment.nvim" },
+   {
+      "numToStr/Comment.nvim",
+      opts = {
+         toggler = {
+            line = "gcc",
+            block = "gbc",
+         },
+      },
+   },
 
    {
       "lewis6991/gitsigns.nvim",
