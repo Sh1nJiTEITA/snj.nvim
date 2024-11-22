@@ -93,6 +93,30 @@ function M.init_telescope_keymaps(builtin)
    vim.keymap.set("n", "<leader>sn", function()
       builtin.find_files({ cwd = vim.fn.stdpath("config") })
    end, { desc = "[S]earch [N]eovim files" })
+
+   vim.keymap.set("n", "<leader>sq", function()
+      builtin.buffers({
+         attach_mappings = function(prompt_bufnr, map)
+            local actions = require("telescope.actions")
+            -- Mapping to close the selected buffer
+            map("i", "<C-x>", function()
+               local selection = require("telescope.actions.state").get_selected_entry()
+               if selection then
+                  vim.cmd("bdelete " .. selection.value)
+                  actions.close(prompt_bufnr)
+               end
+            end)
+            map("n", "<C-x>", function()
+               local selection = require("telescope.actions.state").get_selected_entry()
+               if selection then
+                  vim.cmd("bdelete " .. selection.value)
+                  actions.close(prompt_bufnr)
+               end
+            end)
+            return true
+         end,
+      })
+   end, { desc = "[S]earch and [Q]uit (close) selected buffer" })
 end
 
 -- LSP config

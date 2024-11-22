@@ -4,6 +4,25 @@ require("autocmd")
 
 require("lazy").setup({
    {
+      "kdheepak/lazygit.nvim",
+      lazy = false,
+      cmd = {
+         "LazyGit",
+         "LazyGitConfig",
+         "LazyGitCurrentFile",
+         "LazyGitFilter",
+         "LazyGitFilterCurrentFile",
+      },
+      -- optional for floating window border decoration
+      dependencies = {
+         "nvim-telescope/telescope.nvim",
+         "nvim-lua/plenary.nvim",
+      },
+      config = function()
+         require("telescope").load_extension("lazygit")
+      end,
+   },
+   {
       "NvChad/nvim-colorizer.lua",
       -- config = function()
       -- require("colorizer").setup({
@@ -243,6 +262,8 @@ require("lazy").setup({
                filetypes = { "vert", "frag", "glsl", "geom" },
             },
 
+            biome = {},
+
             cmakelang = {},
             cmake = {},
             pyright = {},
@@ -419,6 +440,10 @@ require("lazy").setup({
          -- vim.o.background = "dark"
          -- vim.o.background = "light"
       end,
+   },
+
+   {
+      "kdheepak/monochrome.nvim",
    },
 
    -- Highlight todo, notes, etc in comments
