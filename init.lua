@@ -8,6 +8,7 @@ require("lazy").setup({
       lazy = false,
       cmd = {
          "LazyGit",
+
          "LazyGitConfig",
          "LazyGitCurrentFile",
          "LazyGitFilter",

@@ -183,36 +183,55 @@ function M.init_nvimcmp_keymaps()
 end
 
 -- harpoon2 --
+IsHarpoonMenuOpen = false
 
 function M.init_harpoon_keymaps()
    local harpoon = require("harpoon")
 
-   vim.keymap.set("n", "<leader>a", function()
+   vim.keymap.set("n", "<leader>aa", function()
       harpoon:list():add()
    end, {
-      desc = "Add to Harpoon2",
+      desc = "Add to Harpoon3",
    })
+
+   vim.keymap.set("n", "<leader>ad", function()
+      harpoon:list():remove()
+   end, {
+      desc = "Delete fron Harpoon3",
+   })
+
+   -- vim.keymap.set("n", "<leader>a", function()
+   --    if IsHarpoonMenuOpen then
+   --       local menu_index = harpoon.ui:select_menu_item()
+   --       harpoon:list():remove(menu_index)
+   --    end
+   -- end, {
+   --    desc = "Remove from Harpoon2",
+   --    buffer = true,
+   -- })
 
    vim.keymap.set("n", "<C-e>", function()
       harpoon.ui:toggle_quick_menu(harpoon:list())
+      IsHarpoonMenuOpen = not IsHarpoonMenuOpen
    end, {
       desc = "Toggle quick menu",
    })
 
-   -- vim.keymap.set("n", "<C-h>", function()
-   --    harpoon:list():select(1)
-   -- end)
-   -- -- vim.keymap.set("n", "<C-t>", function()
-   -- --    harpoon:list():select(2)
-   -- -- end)
-   -- vim.keymap.set("n", "<C-n>", function()
-   --    harpoon:list():select(3)
-   -- end)
-   -- vim.keymap.set("n", "<C-s>", function()
-   --    harpoon:list():select(4)
-   -- end)
+   vim.keymap.set("n", "<M-1>", function()
+      harpoon:list():select(1)
+   end)
+   vim.keymap.set("n", "<M-2>", function()
+      harpoon:list():select(2)
+   end)
+   vim.keymap.set("n", "<M-3>", function()
+      harpoon:list():select(3)
+   end)
+   vim.keymap.set("n", "<M-4>", function()
+      harpoon:list():select(4)
+   end)
+
    --
-   -- -- Toggle previous & next buffers stored within Harpoon list
+   -- Toggle previous & next buffers stored within Harpoon list
    -- vim.keymap.set("n", "<C-S-P>", function()
    --    harpoon:list():prev()
    -- end)
