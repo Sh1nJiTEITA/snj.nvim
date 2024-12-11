@@ -46,9 +46,10 @@ require("lazy").setup({
          local dap = require("dap")
 
          vim.keymap.set("n", "<F5>", dap.continue, { desc = "Dap: Continue" })
-         vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Dap: Step Over" })
-         vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Dap: Step Into" })
-         vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Dap: Step Out" })
+         vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Dap: Step Over" })
+         vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Dap: Step Into" })
+         vim.keymap.set("n", "<F3>", dap.step_out, { desc = "Dap: Step Out" })
+         vim.keymap.set("n", "<F4>", dap.terminate, { desc = "Dap: Terminate" })
          vim.keymap.set("n", "<Leader>b", dap.toggle_breakpoint, { desc = "Dap: Toggle Breakpoint" })
          vim.keymap.set("n", "<Leader>B", function()
             dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
