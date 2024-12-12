@@ -33,6 +33,38 @@ return {
          -- vim.o.background = "light"
       end,
    },
+   -- {
+   --    "xero/miasma.nvim",
+   --    -- priority = 1000,
+   --    event = "VimEnter",
+   --    config = function()
+   --       -- require("miasma").setup()
+   --       -- vim.cmd("colorscheme miasma")
+   --    end,
+   --    opts = {},
+   -- },
+   -- {
+   --    "catppuccin/nvim",
+   --    name = "catppuccin",
+   --    priority = 1000,
+   --
+   --    config = function()
+   --       require("catppuccin").setup({
+   --          flavour = "mocha",
+   --          transparent_background = false,
+   --          integrations = {
+   --             treesitter = true,
+   --             lsp_trouble = true,
+   --             telescope = true,
+   --             nvimtree = true,
+   --             cmp = true,
+   --             gitsigns = true,
+   --          },
+   --       })
+   --       -- require("miasma").setup()
+   --       -- vim.cmd("colorscheme catppuccin")
+   --    end,
+   -- },
    -- { -- You can easily change to a different colorscheme.
    --   -- Change the name of the colorscheme plugin below, and then
    --   -- change the command in the config to whatever the name of that colorscheme is.
