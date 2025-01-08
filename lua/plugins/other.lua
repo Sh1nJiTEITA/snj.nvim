@@ -1,4 +1,8 @@
 return {
+
+   {
+      "dstein64/vim-startuptime",
+   },
    {
       "danymat/neogen",
       config = true,
