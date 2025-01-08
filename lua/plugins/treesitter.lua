@@ -7,6 +7,7 @@ return { -- Highlight, edit, and navigate code
             "bash",
             "c",
             "html",
+            "glsl",
             "lua",
             "luadoc",
             "markdown",
@@ -28,6 +29,14 @@ return { -- Highlight, edit, and navigate code
          require("nvim-treesitter.install").prefer_git = true
          ---@diagnostic disable-next-line: missing-fields
          require("nvim-treesitter.configs").setup(opts)
+         vim.filetype.add({
+            vert = "glsl",
+            frag = "glsl",
+            geom = "glsl",
+            comp = "glsl",
+            tesse = "glsl",
+            tessc = "glsl",
+         })
       end,
    },
    {
