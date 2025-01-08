@@ -64,9 +64,10 @@ return { -- LSP Configuration & Plugins
                cmd = { "clangd", "--background-index", "--clang-tidy", "--completion-style=detailed" },
             },
 
-            glsl_analyzer = {
-               filetypes = { "vert", "frag", "glsl", "geom" },
-            },
+            -- glsl_analyzer = {
+            --    filetypes = { "vert", "frag", "glsl", "geom" },
+            -- },
+            glslls = {},
             cpptools = {},
             biome = {},
             codelldb = {},
@@ -159,5 +160,8 @@ return { -- LSP Configuration & Plugins
             },
          })
       end,
+   },
+   {
+      "nvim-treesitter/playground",
    },
 }
