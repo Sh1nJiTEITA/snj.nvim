@@ -12,6 +12,8 @@ require("lazy").setup({
    require("plugins.themes"),
    require("plugins.mini"),
    require("plugins.treesitter"),
+   -- require("plugins.self"),
+   require("plugins.obsidian"),
 }, {
    ui = {
       icons = vim.g.have_nerd_font and {} or {
@@ -20,7 +22,6 @@ require("lazy").setup({
          event = "",
          ft = "",
          init = "",
-         keys = "",
          plugin = "",
          runtime = "",
          require = "",
