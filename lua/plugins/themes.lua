@@ -1,4 +1,27 @@
 return {
+   -- {
+   --    "ficcdaf/ashen.nvim",
+   --    lazy = false,
+   --    priority = 1000,
+   --    -- configuration is optional!
+   --    -- opts = {
+   --    --    -- your settings here
+   --    -- },
+   --    config = function()
+   --       require("ashen").setup({
+   --          transparent_mode = true,
+   --       })
+   --       vim.cmd("colorscheme ashen")
+   --       -- require("ashen").load()
+   --       vim.cmd([[
+   --          highlight Normal guibg=NONE ctermbg=NONE
+   --          highlight NormalNC guibg=NONE ctermbg=NONE
+   --          highlight EndOfBuffer guibg=NONE ctermbg=NONE
+   --          highlight LineNr guibg=NONE ctermbg=NONE
+   --          highlight SignColumn guibg=NONE ctermbg=NONE
+   --      ]])
+   --    end,
+   -- },
    {
       "ellisonleao/gruvbox.nvim",
       priority = 1000,
