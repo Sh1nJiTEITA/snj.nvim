@@ -1,6 +1,14 @@
 return {
+   -- {
+   --    "Sh1nJiTEITA/lost.nvim",
+   --    opts = {},
+   --    priority = 1000,
+   --    event = "VimEnter",
+   -- },
+
    {
       "Sh1nJiTEITA/ashenbox.nvim",
+      -- "ficcdaf/ashen.nvim",
       priority = 1000,
       event = "VimEnter",
       config = function()
