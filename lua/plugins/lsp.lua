@@ -73,7 +73,11 @@ return { -- LSP Configuration & Plugins
             codelldb = {},
             cmakelang = {},
             cmake = {},
-            pyright = {},
+            pyright = {
+               on_attach = function(client, bufnr)
+                  client.server_capabilities.documentFormattingProvider = false
+               end,
+            },
             lua_ls = {
                settings = {
                   Lua = {

@@ -1,5 +1,9 @@
 return {
    {
+      "shortcuts/no-neck-pain.nvim",
+      version = "*",
+   },
+   {
       "kiyoon/jupynium.nvim",
       build = "sudo pacman -S python-jupynium", -- FIXME: Not working on ARCH
       config = function()

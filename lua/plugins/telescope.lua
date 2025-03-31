@@ -21,6 +21,18 @@ return {
                require("telescope.themes").get_dropdown(),
             },
          },
+         pickers = {
+            find_files = {
+               hidden = true,
+            },
+         },
+         defaults = {
+            file_ignore_patterns = {
+               ".git/.*",
+               ".github/.*",
+               ".*external/.*",
+            },
+         },
       })
 
       -- Enable Telescope extensions if they are installed

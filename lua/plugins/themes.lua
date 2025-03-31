@@ -6,63 +6,85 @@ return {
    --    event = "VimEnter",
    -- },
 
-   {
-      "Sh1nJiTEITA/ashenbox.nvim",
-      -- "ficcdaf/ashen.nvim",
-      priority = 1000,
-      event = "VimEnter",
-      config = function()
-         require("ashen").setup({
-            terminal_colors = true,
-            transparent = true,
-            colors = {},
-         })
-         require("ashen").load()
-         -- -- Прозрачность для окон и разделителей
-         vim.cmd([[
-            " highlight Normal guibg=NONE ctermbg=NONE
-            " highlight NormalNC guibg=NONE ctermbg=NONE
-            " highlight EndOfBuffer guibg=NONE ctermbg=NONE
-            highlight WinSeparator guibg=NONE ctermbg=NONE
-            highlight VertSplit guibg=NONE ctermbg=NONE
-         ]])
-      end,
-   },
-
    -- {
-   --    "ellisonleao/gruvbox.nvim",
+   --    "Sh1nJiTEITA/ashenbox.nvim",
+   --    -- "ficcdaf/ashen.nvim",
    --    priority = 1000,
    --    event = "VimEnter",
    --    config = function()
-   --       require("gruvbox").setup({
-   --          terminal_colors = true, -- add neovim terminal colors
-   --          undercurl = true,
-   --          underline = true,
-   --          bold = true,
-   --          italic = {
-   --             strings = true,
-   --             emphasis = true,
-   --             comments = true,
-   --             operators = false,
-   --             folds = true,
-   --          },
-   --          strikethrough = true,
-   --          invert_selection = false,
-   --          invert_signs = false,
-   --          invert_tabline = false,
-   --          invert_intend_guides = false,
-   --          inverse = true, -- invert background for search, diffs, statuslines and errors
-   --          contrast = "", -- can be "hard", "soft" or empty string
-   --          palette_overrides = {},
-   --          overrides = {},
-   --          dim_inactive = false,
-   --          transparent_mode = true,
+   --       require("ashen").setup({
+   --          terminal_colors = true,
+   --          transparent = true,
+   --          colors = {},
    --       })
-   --       vim.cmd("colorscheme gruvbox")
-   --       -- vim.o.background = "dark"
-   --       -- vim.o.background = "light"
+   --       require("ashen").load()
+   --       -- -- Прозрачность для окон и разделителей
+   --       vim.cmd([[
+   --          " highlight Normal guibg=NONE ctermbg=NONE
+   --          " highlight NormalNC guibg=NONE ctermbg=NONE
+   --          " highlight EndOfBuffer guibg=NONE ctermbg=NONE
+   --          highlight WinSeparator guibg=NONE ctermbg=NONE
+   --          highlight VertSplit guibg=NONE ctermbg=NONE
+   --       ]])
    --    end,
    -- },
+
+   -- {
+   --    "slugbyte/lackluster.nvim",
+   --    lazy = false,
+   --    priority = 1000,
+   --    init = function()
+   --       -- vim.cmd.colorscheme("lackluster")
+   --       -- vim.cmd.colorscheme("lackluster-hack") -- my favorite
+   --       vim.cmd.colorscheme("lackluster-mint")
+   --       vim.cmd([[
+   --          highlight Normal guibg=NONE ctermbg=NONE
+   --          highlight NormalNC guibg=NONE ctermbg=NONE
+   --          highlight EndOfBuffer guifg=#AAAAAA ctermbg=NONE
+   --          highlight WinSeparator guibg=NONE ctermbg=NONE
+   --          highlight VertSplit guibg=NONE ctermbg=NONE
+   --          highlight SignColumn guibg=NONE ctermbg=NONE
+   --          highlight GitSignsAdd guibg=NONE ctermbg=NONE
+   --          highlight GitSignsChange guibg=NONE ctermbg=NONE
+   --          highlight GitSignsDelete guibg=NONE ctermbg=NONE
+   --       ]])
+   --    end,
+   -- },
+
+   {
+      "ellisonleao/gruvbox.nvim",
+      priority = 1000,
+      event = "VimEnter",
+      config = function()
+         require("gruvbox").setup({
+            terminal_colors = true, -- add neovim terminal colors
+            undercurl = true,
+            underline = true,
+            bold = true,
+            italic = {
+               strings = true,
+               emphasis = true,
+               comments = true,
+               operators = false,
+               folds = true,
+            },
+            strikethrough = true,
+            invert_selection = false,
+            invert_signs = false,
+            invert_tabline = false,
+            invert_intend_guides = false,
+            inverse = true, -- invert background for search, diffs, statuslines and errors
+            contrast = "soft", -- can be "hard", "soft" or empty string
+            palette_overrides = {},
+            overrides = {},
+            dim_inactive = false,
+            transparent_mode = true,
+         })
+         vim.cmd("colorscheme gruvbox")
+         -- vim.o.background = "dark"
+         -- vim.o.background = "light"
+      end,
+   },
 
    -- {
    --    "catppuccin/nvim",

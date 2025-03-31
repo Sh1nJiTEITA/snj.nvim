@@ -3,7 +3,7 @@ require("autocmd")
 require("lazy").setup({
    require("plugins.dap"),
    require("plugins.lazygit"),
-   require("plugins.neo-tree"),
+   -- require("plugins.neo-tree"),
    require("plugins.harpoon"),
    require("plugins.other"),
    require("plugins.telescope"),

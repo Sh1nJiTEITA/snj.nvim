@@ -20,6 +20,10 @@ return {
             name = "Personal",
             path = "~/Data/Sdd/Personal/",
          },
+         {
+            name = "Science",
+            path = "~/Data/Sdd/Science/",
+         },
       },
 
       -- see below for full list of options 👇
