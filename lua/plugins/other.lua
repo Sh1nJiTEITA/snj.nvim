@@ -56,38 +56,6 @@ return {
    { "tpope/vim-sleuth" },
 
    {
-      "lewis6991/gitsigns.nvim",
-      config = function()
-         local module = require("gitsigns")
-         module.setup({
-            signs = {
-               add = { text = "+" },
-               change = { text = "~" },
-               delete = { text = "_" },
-               topdelete = { text = "‾" },
-               changedelete = { text = "~" },
-            },
-         })
-
-         local toggleSigns = function()
-            local vim_status = vim.opt.signcolumn:get()
-            if vim_status == "yes" then
-               vim.opt.signcolumn = "no"
-               module.toggle_signs(false)
-            else
-               vim.opt.signcolumn = "yes"
-               module.toggle_signs(true)
-            end
-         end
-
-         vim.keymap.set("n", "<leader>ts", toggleSigns, { desc = "[T]oggle git [S]ings" })
-
-         -- disable signs at start (because its already enabled)
-         toggleSigns()
-      end,
-   },
-
-   {
       "numToStr/Comment.nvim",
       opts = {
          toggler = {
