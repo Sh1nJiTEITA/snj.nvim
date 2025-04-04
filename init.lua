@@ -14,6 +14,7 @@ require("lazy").setup({
    require("plugins.treesitter"),
    -- require("plugins.self"),
    require("plugins.obsidian"),
+   require("plugins.yazi"),
 }, {
    ui = {
       icons = vim.g.have_nerd_font and {} or {
@@ -25,7 +26,7 @@ require("lazy").setup({
          plugin = "",
          runtime = "",
          require = "",
-         source = "",
+         source = " ",
          start = "北",
          task = "",
          lazy = "鈴",
