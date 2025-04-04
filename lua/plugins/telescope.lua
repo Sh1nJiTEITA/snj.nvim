@@ -13,7 +13,16 @@ return {
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
       { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
-      { "andrew-george/telescope-themes" },
+      {
+         "andrew-george/telescope-themes",
+         config = function()
+            vim.keymap.set("n", "<leader>st", ":Telescope themes<CR>", {
+               desc = "[S]earch [T]hemes",
+               noremap = true,
+               silent = true,
+            })
+         end,
+      },
    },
    config = function()
       require("telescope").setup({
