@@ -10,7 +10,7 @@ return {
             topdelete = { text = "‾" },
             changedelete = { text = "~" },
          },
-         word_diff = true,
+         word_diff = false,
       })
 
       local toggleSigns = function()

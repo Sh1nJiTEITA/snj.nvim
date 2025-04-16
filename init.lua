@@ -4,7 +4,6 @@ require("lazy").setup({
    require("plugins.dap"),
    require("plugins.lazygit"),
    -- require("plugins.neo-tree"),
-   require("plugins.harpoon"),
    require("plugins.other"),
    require("plugins.gitsigns"),
    require("plugins.telescope"),
@@ -16,6 +15,7 @@ require("lazy").setup({
    -- require("plugins.self"),
    require("plugins.obsidian"),
    require("plugins.yazi"),
+   require("plugins.harpoon"),
 }, {
    ui = {
       icons = vim.g.have_nerd_font and {} or {
