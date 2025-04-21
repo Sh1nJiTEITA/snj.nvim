@@ -1,7 +1,6 @@
 return {
    {
-      "shortcuts/no-neck-pain.nvim",
-      version = "*",
+      "boltlessengineer/sense.nvim",
    },
    {
       "kiyoon/jupynium.nvim",
@@ -68,7 +67,20 @@ return {
       "folke/which-key.nvim",
       event = "VimEnter",
       config = function()
-         require("which-key").setup()
+         require("which-key").setup({
+            win = {
+               no_overlap = true,
+               padding = { 0, 0 },
+               title = true,
+               title_pos = "center",
+               zindex = 1000,
+               border = "rounded", -- <-- Add this line
+               bo = {},
+               wo = {
+                  -- winblend = 10,
+               },
+            },
+         })
          local keymaps_module = require("keymaps")
          require("which-key").add(keymaps_module.init_whichkey_keymaps())
       end,

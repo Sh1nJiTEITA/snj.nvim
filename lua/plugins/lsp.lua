@@ -63,10 +63,7 @@ return { -- LSP Configuration & Plugins
             clangd = {
                cmd = { "clangd", "--background-index", "--clang-tidy", "--completion-style=detailed" },
             },
-
-            -- glsl_analyzer = {
-            --    filetypes = { "vert", "frag", "glsl", "geom" },
-            -- },
+            -- clangformat = {},
             glslls = {},
             cpptools = {},
             biome = {},
@@ -143,7 +140,50 @@ return { -- LSP Configuration & Plugins
          local luasnip = require("luasnip")
          luasnip.config.setup({})
 
+         local kind_icons = {
+            Text = "",
+            Method = "󰆧",
+            Function = "󰊕",
+            Constructor = "",
+            Field = "󰇽",
+            Variable = "󰂡",
+            Class = "󰠱",
+            Interface = "",
+            Module = "",
+            Property = "󰜢",
+            Unit = "",
+            Value = "󰎠",
+            Enum = "",
+            Keyword = "󰌋",
+            Snippet = "",
+            Color = "󰏘",
+            File = "󰈙",
+            Reference = "",
+            Folder = "󰉋",
+            EnumMember = "",
+            Constant = "󰏿",
+            Struct = "",
+            Event = "",
+            Operator = "󰆕",
+            TypeParameter = "󰅲",
+         }
+
          cmp.setup({
+            formatting = {
+               format = function(entry, vim_item)
+                  -- Kind icons
+                  vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind], vim_item.kind) -- This concatenates the icons with the name of the item kind
+                  -- Source
+                  vim_item.menu = ({
+                     buffer = "[Buffer]",
+                     nvim_lsp = "[LSP]",
+                     luasnip = "[LuaSnip]",
+                     nvim_lua = "[Lua]",
+                     latex_symbols = "[LaTeX]",
+                  })[entry.source.name]
+                  return vim_item
+               end,
+            },
             snippet = {
                expand = function(args)
                   luasnip.lsp_expand(args.body)
@@ -161,6 +201,10 @@ return { -- LSP Configuration & Plugins
                { name = "nvim_lsp" },
                { name = "luasnip" },
                { name = "path" },
+            },
+            window = {
+               completion = cmp.config.window.bordered(),
+               documentation = cmp.config.window.bordered(),
             },
          })
       end,

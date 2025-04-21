@@ -90,28 +90,28 @@ return {
       end,
    },
 
-   {
-      "Sh1nJiTEITA/ashenbox.nvim",
-      -- "ficcdaf/ashen.nvim",
-      -- priority = 1000,
-      -- event = "VimEnter",
-      config = function()
-         require("ashen").setup({
-            terminal_colors = true,
-            -- transparent = true,
-            colors = {},
-         })
-         require("ashen").load()
-         -- -- Прозрачность для окон и разделителей
-         vim.cmd([[
-            " highlight Normal guibg=NONE ctermbg=NONE
-            " highlight NormalNC guibg=NONE ctermbg=NONE
-            " highlight EndOfBuffer guibg=NONE ctermbg=NONE
-            highlight WinSeparator guibg=NONE ctermbg=NONE
-            highlight VertSplit guibg=NONE ctermbg=NONE
-         ]])
-      end,
-   },
+   -- {
+   --    "Sh1nJiTEITA/ashenbox.nvim",
+   --    -- "ficcdaf/ashen.nvim",
+   --    -- priority = 1000,
+   --    -- event = "VimEnter",
+   --    config = function()
+   --       require("ashen").setup({
+   --          terminal_colors = true,
+   --          -- transparent = true,
+   --          colors = {},
+   --       })
+   --       require("ashen").load()
+   --       -- -- Прозрачность для окон и разделителей
+   --       vim.cmd([[
+   --          " highlight Normal guibg=NONE ctermbg=NONE
+   --          " highlight NormalNC guibg=NONE ctermbg=NONE
+   --          " highlight EndOfBuffer guibg=NONE ctermbg=NONE
+   --          highlight WinSeparator guibg=NONE ctermbg=NONE
+   --          highlight VertSplit guibg=NONE ctermbg=NONE
+   --       ]])
+   --    end,
+   -- },
 
    {
       "slugbyte/lackluster.nvim",
