@@ -78,8 +78,10 @@ return { -- LSP Configuration & Plugins
             lua_ls = {
                settings = {
                   Lua = {
-                     completion = {
-                        callSnippet = "Replace",
+                     workspace = {
+                        -- Path to your Addons directory
+                        userThirdParty = { os.getenv("HOME") .. ".local/share/LuaAddons" },
+                        checkThirdParty = "Apply",
                      },
                   },
                },
@@ -105,6 +107,17 @@ return { -- LSP Configuration & Plugins
          require("mason-nvim-dap").setup({
             ensure_installed = { "cpptools" },
          })
+
+         vim.diagnostic.config({
+            float = {
+               border = "rounded",
+            },
+         })
+
+         vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+
+         vim.lsp.handlers["textDocument/signatureHelp"] =
+            vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
       end,
    },
    {
@@ -203,7 +216,9 @@ return { -- LSP Configuration & Plugins
                { name = "path" },
             },
             window = {
-               completion = cmp.config.window.bordered(),
+               completion = cmp.config.window.bordered({
+                  col_offset = 0,
+               }),
                documentation = cmp.config.window.bordered(),
             },
          })

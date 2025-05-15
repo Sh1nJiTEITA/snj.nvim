@@ -1,7 +1,11 @@
 return {
-   {
-      "boltlessengineer/sense.nvim",
-   },
+
+   -- {
+   --    "chaoren/vim-wordmotion",
+   -- },
+   -- {
+   --    "boltlessengineer/sense.nvim",
+   -- },
    {
       "kiyoon/jupynium.nvim",
       build = "sudo pacman -S python-jupynium", -- FIXME: Not working on ARCH

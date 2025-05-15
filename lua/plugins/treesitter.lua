@@ -1,9 +1,33 @@
 return { -- Highlight, edit, and navigate code
    {
+      "nvim-treesitter/nvim-treesitter-context",
+      opts = {
+         multiwindow = true,
+         mode = "topline",
+         -- multiline_threshold = 2,
+         -- zindex = 2,
+         max_lines = 2,
+         patterns = {
+            cpp = {
+               "class",
+               "function",
+               "method",
+            },
+         },
+      },
+      config = function(_, opts)
+         require("treesitter-context").setup(opts)
+         vim.keymap.set("n", "[c", function()
+            require("treesitter-context").go_to_context(vim.v.count1)
+         end, { silent = true })
+      end,
+   },
+   {
       "nvim-treesitter/nvim-treesitter",
       build = ":TSUpdate",
       opts = {
          ensure_installed = {
+            "latex",
             "bash",
             "c",
             "html",

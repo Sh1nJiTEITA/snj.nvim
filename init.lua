@@ -1,6 +1,7 @@
 require("vim_options")
 require("autocmd")
 require("lazy").setup({
+   require("plugins.snacks"),
    require("plugins.dap"),
    require("plugins.lazygit"),
    -- require("plugins.neo-tree"),
@@ -14,6 +15,7 @@ require("lazy").setup({
    require("plugins.treesitter"),
    -- require("plugins.self"),
    require("plugins.obsidian"),
+
    require("plugins.yazi"),
    require("plugins.harpoon"),
 }, {

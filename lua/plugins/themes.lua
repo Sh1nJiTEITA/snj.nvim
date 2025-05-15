@@ -9,6 +9,7 @@ local function makeTransparent()
             highlight GitSignsAdd guibg=NONE ctermbg=NONE
             highlight GitSignsChange guibg=NONE ctermbg=NONE
             highlight GitSignsDelete guibg=NONE ctermbg=NONE
+            highlight TreesitterContext guibg=#1f2335)
          ]])
 end
 
@@ -86,6 +87,12 @@ return {
             },
          })
          vim.cmd("colorscheme rose-pine")
+         vim.api.nvim_set_hl(0, "TreesitterContextBottom", {
+            underline = true,
+            sp = "#c4a7e7", -- your desired underline color
+            fg = "NONE",
+            bg = "NONE",
+         })
          initYankOnHighlight()
       end,
    },
