@@ -32,6 +32,10 @@ return {
    -- },
 
    {
+      "rebelot/kanagawa.nvim",
+   },
+
+   {
       "rose-pine/neovim",
       name = "rose-pine",
       priority = 1000,

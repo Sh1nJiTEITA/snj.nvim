@@ -49,11 +49,39 @@ return {
    {
       "dstein64/vim-startuptime",
    },
+   -- {
+   --    "danymat/neogen",
+   --    config = true,
+   --    -- Uncomment next line if you want to follow only stable versions
+   --    -- version = "*"
+   -- },
    {
       "danymat/neogen",
-      config = true,
-      -- Uncomment next line if you want to follow only stable versions
-      -- version = "*"
+      config = function()
+         require("neogen").setup({
+            enabled = true,
+            input_after_comment = true,
+            languages = {
+               cpp = {
+                  template = {
+                     annotation_convention = "doxygen",
+                     -- override templates directly
+                     templates = {
+                        func = {
+                           { nil, "//! ${1:Brief description}" },
+                           { nil, "//!" },
+                           { nil, "//! @param ${2:param} ${3:description}" },
+                           { nil, "//! @return ${4:description}" },
+                        },
+                     },
+                  },
+               },
+            },
+         })
+      end,
+      dependencies = {
+         "nvim-treesitter/nvim-treesitter",
+      },
    },
    { "xiyaowong/transparent.nvim" },
    { "tpope/vim-sleuth" },

@@ -17,12 +17,8 @@ return {
    opts = {
       workspaces = {
          {
-            name = "Personal",
-            path = "~/Data/Sdd/Personal/",
-         },
-         {
             name = "Science",
-            path = "~/Data/Sdd/Science/",
+            path = "~/Data/Notes/Science/",
          },
       },
 

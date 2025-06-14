@@ -32,4 +32,29 @@ vim.api.nvim_create_user_command("ToggleTheme", function()
    ToggleTheme()
 end, { nargs = 0 })
 
+local function ConvertDoxygenToCppStyle(start_line, end_line)
+   local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+   local new_lines = {}
+
+   for _, line in ipairs(lines) do
+      local trimmed = vim.trim(line)
+
+      if trimmed == "/**" or trimmed == "*/" then
+         goto continue
+      end
+
+      trimmed = trimmed:gsub("^%s*%*%s?", "")
+
+      table.insert(new_lines, "//! " .. trimmed)
+
+      ::continue::
+   end
+
+   vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, new_lines)
+end
+
+vim.api.nvim_create_user_command("ConvertComment", function(opts)
+   ConvertDoxygenToCppStyle(opts.line1, opts.line2)
+end, { nargs = 0, range = true })
+
 return

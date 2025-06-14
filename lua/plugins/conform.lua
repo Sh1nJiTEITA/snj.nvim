@@ -28,6 +28,7 @@ return {
          cpp = { "clang_format" },
          c = { "clang_format" },
          python = { "isort", "black" },
+         yaml = { "yamlfix" },
       },
    },
 }

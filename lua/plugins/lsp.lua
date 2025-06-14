@@ -28,9 +28,7 @@ return { -- LSP Configuration & Plugins
             group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
             callback = function(event)
                local client = vim.lsp.get_client_by_id(event.data.client_id)
-
                require("keymaps").init_lspconfig_keymaps(event, client)
-
                -- When you move your cursor, the highlights will be cleared (the second autocommand).
                if client and client.server_capabilities.documentHighlightProvider then
                   local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
@@ -95,18 +93,20 @@ return { -- LSP Configuration & Plugins
          })
          require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-         require("mason-lspconfig").setup({
-            handlers = {
-               function(server_name)
-                  local server = servers[server_name] or {}
-                  server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-                  require("lspconfig")[server_name].setup(server)
-               end,
-            },
-         })
-         require("mason-nvim-dap").setup({
-            ensure_installed = { "cpptools" },
-         })
+         -- require("mason-lspconfig").setup({
+         --    handlers = {
+         --       function(server_name)
+         --          local server = servers[server_name] or {}
+         --          server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+         --          require("lspconfig")[server_name].setup(server)
+         --       end,
+         --    },
+         -- })
+         -- require("mason-nvim-dap").setup({
+         --    ensure_installed = { "cpptools" },
+         -- })
+
+         local lspconfig = require("lspconfig")
 
          vim.diagnostic.config({
             float = {
@@ -114,8 +114,15 @@ return { -- LSP Configuration & Plugins
             },
          })
 
-         vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+         require("mason-lspconfig").setup_handlers({
+            function(server_name)
+               local server = servers[server_name] or {}
+               server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+               require("lspconfig")[server_name].setup(server)
+            end,
+         })
 
+         vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
          vim.lsp.handlers["textDocument/signatureHelp"] =
             vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
       end,
