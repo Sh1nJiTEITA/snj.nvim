@@ -151,6 +151,7 @@ return { -- LSP Configuration & Plugins
          local capabilities = require("blink.cmp").get_lsp_capabilities()
 
          -- Enumeration of needed to be installed lsp-servers with settings
+         local util = require("lspconfig.util")
          local servers = {
 
             -->
@@ -161,7 +162,6 @@ return { -- LSP Configuration & Plugins
                   },
                },
             },
-            --/
          }
 
          local ensure_installed = vim.tbl_keys(servers or {})
@@ -251,7 +251,7 @@ return { -- LSP Configuration & Plugins
          },
 
          completion = {
-            documentation = { auto_show = false, auto_show_delay_ms = 500 },
+            documentation = { auto_show = false, auto_show_delay_ms = 500, window = { border = "rounded" } },
             menu = {
                border = "rounded",
                draw = {
@@ -290,7 +290,7 @@ return { -- LSP Configuration & Plugins
 
          fuzzy = { implementation = "lua" },
 
-         signature = { enabled = true },
+         signature = { enabled = true, window = { border = "rounded" } },
       },
    },
    {
