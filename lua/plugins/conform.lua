@@ -29,6 +29,10 @@ return {
          c = { "clang_format" },
          python = { "isort", "black" },
          yaml = { "yamlfix" },
+         -- javascript = { "biome", "biome-organize-imports" },
+         -- javascriptreact = { "biome", "biome-organize-imports" },
+         -- typescript = { "biome", "biome-organize-imports" },
+         -- typescriptreact = { "biome", "biome-organize-imports" },
       },
    },
 }

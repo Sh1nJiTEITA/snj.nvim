@@ -1,13 +1,27 @@
 return { -- LSP Configuration & Plugins
    {
+      --
       "neovim/nvim-lspconfig",
       dependencies = {
+
          -- Automatically install LSPs and related tools to stdpath for Neovim
+         -- Only installs stuff
          { "williamboman/mason.nvim", config = true },
+
+         -- Bridges nvim-lspconfig with mason.nvim
          { "williamboman/mason-lspconfig.nvim" },
+
+         -- Installs lsp servers datas in auto-mode
          { "WhoIsSethDaniel/mason-tool-installer.nvim" },
+
+         -- UI for LSP servers logs like progress bars (percentage of
+         -- loadiong smt)
          { "j-hui/fidget.nvim", opts = {} },
+
+         -- Auto configurator for Lua-lsp (lua-ls) server
          { "folke/neodev.nvim", opts = {} },
+
+         -- DAP (DEBUGGER)
          {
             "jayp0521/mason-nvim-dap",
             event = "VeryLazy",
@@ -15,15 +29,10 @@ return { -- LSP Configuration & Plugins
                "williamboman/mason.nvim",
                "mfussenegger/nvim-dap",
             },
-            opts = {
-               handlers = {},
-               -- ensure_installed = {
-               --    "codelldb"
-               -- }
-            },
          },
       },
       config = function()
+         -- vim.lsp.enable("biome")
          vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
             callback = function(event)
@@ -57,6 +66,8 @@ return { -- LSP Configuration & Plugins
          local capabilities = vim.lsp.protocol.make_client_capabilities()
          capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
+         local util = require("lspconfig.util")
+
          local servers = {
             clangd = {
                cmd = { "clangd", "--background-index", "--clang-tidy", "--completion-style=detailed" },
@@ -64,7 +75,37 @@ return { -- LSP Configuration & Plugins
             -- clangformat = {},
             glslls = {},
             cpptools = {},
-            biome = {},
+            -- biome = {},
+            biome = {
+               cmd = { "biome", "lsp-proxy" },
+               filetypes = {
+                  "astro",
+                  "css",
+                  "graphql",
+                  "html",
+                  "javascript",
+                  "javascriptreact",
+                  "json",
+                  "jsonc",
+                  "svelte",
+                  "typescript",
+                  "typescript.tsx",
+                  "typescriptreact",
+                  "vue",
+               },
+               workspace_required = true,
+               root_dir = function(fname)
+                  local root_files = { "biome.json", "biome.jsonc" }
+                  -- util.insert_package_json — добавляет package.json в список, если нужно
+                  root_files = util.insert_package_json(root_files, "biome", fname)
+                  local found = vim.fs.find(root_files, { path = fname, upward = true })
+                  if found[1] then
+                     return vim.fs.dirname(found[1])
+                  end
+                  -- fallback: например, корень git или директория файла
+                  return util.find_git_ancestor(fname) or vim.loop.os_homedir()
+               end,
+            },
             codelldb = {},
             cmakelang = {},
             cmake = {},
