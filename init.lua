@@ -1,5 +1,8 @@
 require("vim_options")
 require("autocmd")
+
+local b = 20
+
 require("lazy").setup({
    require("plugins.snacks"),
    require("plugins.dap"),
@@ -15,7 +18,6 @@ require("lazy").setup({
    require("plugins.treesitter"),
    -- require("plugins.self"),
    require("plugins.obsidian"),
-
    require("plugins.yazi"),
    require("plugins.harpoon"),
 }, {
