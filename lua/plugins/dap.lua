@@ -59,6 +59,7 @@ return {
             {
                name = "Launch",
                type = "codelldb",
+               -- type = "lldb",
                request = "launch",
                program = function()
                   local path = vim.g.dap_cpp_path

@@ -162,6 +162,11 @@ return { -- LSP Configuration & Plugins
                   },
                },
             },
+            -- ["clang-format"] = {},
+            pyright = {},
+            clangd = {},
+            -- cmake_language_server = {},
+            -- glslls = {},
          }
 
          local ensure_installed = vim.tbl_keys(servers or {})
