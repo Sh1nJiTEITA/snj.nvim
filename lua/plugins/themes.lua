@@ -98,6 +98,13 @@ return {
             bg = "NONE",
          })
          initYankOnHighlight()
+         -- vim.cmd("highlight DapStoppedLine guibg=#3c3836 gui=underline")
+         vim.schedule(function()
+            vim.api.nvim_set_hl(0, "DapStoppedLine", {
+               bg = "#3c3836",
+               underline = true,
+            })
+         end)
       end,
    },
 

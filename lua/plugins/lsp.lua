@@ -291,7 +291,7 @@ return { -- LSP Configuration & Plugins
             },
          },
 
-         snippets = { present = "luasnip" },
+         -- snippets = { present = "luasnip" },
 
          fuzzy = { implementation = "lua" },
 

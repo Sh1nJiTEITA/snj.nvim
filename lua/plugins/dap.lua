@@ -55,11 +55,17 @@ return {
          vim.keymap.set("n", "<Leader>dr", dap.repl.open, { desc = "Dap: Open REPL" })
          vim.keymap.set("n", "<Leader>dl", dap.run_last, { desc = "Dap: Run Last" })
 
+         dap.adapters.lldb = {
+            type = "executable",
+            command = "/usr/bin/codelldb", -- adjust as needed
+            name = "lldb",
+         }
+
          dap.configurations.cpp = {
             {
                name = "Launch",
-               type = "codelldb",
-               -- type = "lldb",
+               -- type = "codelldb",
+               type = "lldb",
                request = "launch",
                program = function()
                   local path = vim.g.dap_cpp_path
@@ -74,6 +80,12 @@ return {
                args = {},
             },
          }
+         vim.fn.sign_define("DapStopped", {
+            text = "🛑",
+            texthl = "ErrorMsg",
+            linehl = "DapStoppedLine",
+            numhl = "",
+         })
       end,
    },
 }
