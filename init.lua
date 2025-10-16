@@ -20,20 +20,20 @@ require("lazy").setup({
    require("plugins.yazi"),
    require("plugins.harpoon"),
 }, {
-   ui = {
-      icons = vim.g.have_nerd_font and {} or {
-         cmd = "",
-         config = "",
-         event = "",
-         ft = "",
-         init = "",
-         plugin = "",
-         runtime = "",
-         require = "",
-         source = " ",
-         start = "北",
-         task = "",
-         lazy = "鈴",
-      },
-   },
+	ui = {
+		icons = vim.g.have_nerd_font and {} or {
+			cmd = "",
+			config = "",
+			event = "",
+			ft = "",
+			init = "",
+			plugin = "",
+			runtime = "",
+			require = "",
+			source = " ",
+			start = "北",
+			task = "",
+			lazy = "鈴",
+		},
+	},
 })

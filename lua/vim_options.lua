@@ -2,7 +2,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
 vim.g.markdown_fenced_languages = {
-   "ts=typescript",
+	"ts=typescript",
 }
 -- Number at current line
 vim.opt.number = true
@@ -33,11 +33,11 @@ vim.opt.termguicolors = true
 vim.opt.conceallevel = 1
 -- vim.opt.laststatus = 3
 vim.filetype.add({
-   extension = {
-      vert = "glsl",
-      frag = "glsl",
-      geom = "glsl",
-   },
+	extension = {
+		vert = "glsl",
+		frag = "glsl",
+		geom = "glsl",
+	},
 })
 
 vim.cmd("set colorcolumn=80")
