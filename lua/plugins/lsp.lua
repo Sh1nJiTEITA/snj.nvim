@@ -62,7 +62,8 @@ return { -- LSP Configuration & Plugins
                map("grd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
 
                -- Default classic old jump logic
-               map("gd", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+               map("gf", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+               map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
                map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
 
                --

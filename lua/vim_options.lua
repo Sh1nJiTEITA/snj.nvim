@@ -31,7 +31,7 @@ vim.opt.hlsearch = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
-vim.opt.conceallevel = 0
+vim.opt.conceallevel = 1
 -- vim.opt.laststatus = 3
 
 vim.filetype.add({
@@ -41,5 +41,12 @@ vim.filetype.add({
       geom = "glsl",
    },
 })
+
+vim.cmd("set colorcolumn=80")
+
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
+vim.o.softtabstop = 4
+vim.o.expandtab = true
 
 return
