@@ -35,7 +35,10 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 -- vim.api.nvim_set_keymap("n", "<C-t>", ":NvimTreeToggle()<CR>", { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap("n", "<C-t>", ":Neotree toggle<CR>", { noremap = true, silent = true })
 vim.api.nvim_create_user_command("Wqa", "wqa", {})
+vim.api.nvim_create_user_command("WQa", "wqa", {})
+vim.api.nvim_create_user_command("WQA", "wqa", {})
 vim.api.nvim_create_user_command("Wa", "wa", {})
+vim.api.nvim_create_user_command("WA", "wa", {})
 
 -- Telescope
 

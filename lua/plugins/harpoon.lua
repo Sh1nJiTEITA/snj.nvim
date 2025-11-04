@@ -70,17 +70,17 @@ return {
          harpoon:list():select(6)
       end, { desc = "Move harpoon2 => 6" })
 
-      vim.keymap.set("n", "<leader>7", function()
-         harpoon:list():select(7)
-      end, { desc = "Move harpoon2 => 7" })
+      -- vim.keymap.set("n", "<leader>7", function()
+      --    harpoon:list():select(7)
+      -- end, { desc = "Move harpoon2 => 7" })
 
-      vim.keymap.set("n", "<leader>8", function()
-         harpoon:list():select(8)
-      end, { desc = "Move harpoon2 => 8" })
+      -- vim.keymap.set("n", "<leader>8", function()
+      --    harpoon:list():select(8)
+      -- end, { desc = "Move harpoon2 => 8" })
 
-      vim.keymap.set("n", "<leader>9", function()
-         harpoon:list():select(9)
-      end, { desc = "Move harpoon2 => 9" })
+      -- vim.keymap.set("n", "<leader>9", function()
+      --    harpoon:list():select(9)
+      -- end, { desc = "Move harpoon2 => 9" })
 
       -- Toggle previous & next buffers stored within Harpoon list
       vim.keymap.set("n", "<A-TAB>", function()

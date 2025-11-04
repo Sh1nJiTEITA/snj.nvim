@@ -3,8 +3,8 @@ require("autocmd")
 require("tex_launch")
 
 require("lazy").setup({
-   require("plugins.snacks"),
-   require("plugins.dap"),
+   -- require("plugins.snacks"),
+   -- require("plugins.dap"),
    require("plugins.lazygit"),
    -- require("plugins.neo-tree"),
    require("plugins.other"),
@@ -16,7 +16,7 @@ require("lazy").setup({
    require("plugins.mini"),
    require("plugins.treesitter"),
    -- require("plugins.self"),
-   require("plugins.obsidian"),
+   -- require("plugins.obsidian"),
    require("plugins.yazi"),
    require("plugins.harpoon"),
 }, {

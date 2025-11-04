@@ -1,3 +1,92 @@
+-- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
+---@param client vim.lsp.Client
+---@param method vim.lsp.protocol.Method
+---@param bufnr? integer some lsp support methods only in specific files
+---@return boolean
+local function client_supports_method(client, method, bufnr)
+   if vim.fn.has("nvim-0.11") == 1 then
+      return client:supports_method(method, bufnr)
+   else
+      return client.supports_method(method, { bufnr = bufnr })
+   end
+end
+
+local mapKey = function(event, keys, func, desc, mode)
+   mode = mode or "n"
+   vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+end
+
+---@param event table
+local function mapLspServer(event)
+   local mapKey = function(keys, func, desc, mode)
+      mapKey(event, keys, func, desc, mode)
+   end
+
+   -- Rename variable, function, or any other code unit
+   mapKey("grn", vim.lsp.buf.rename, "[R]e[n]ame")
+
+   -- Some useful actions you need under cursor like disabling diagnostic for a piece
+   -- of code. Not to write '# pyright: ignore ...' or smt like it. This mapping will
+   -- do it for user undependently of code language
+   mapKey("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
+
+   -- Searches for references of code unit under cursor
+   -- Works simular to RENAMING but provides (for this neovim configuration) ability
+   -- to show all variable (or smt else) instances inside telescope
+   mapKey("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+
+   -- From kickstart. Maybe useful
+   mapKey("gri", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+   mapKey("grd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+
+   -- Default classic old jump logic
+   mapKey("gf", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+   mapKey("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+   mapKey("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
+
+   --
+   mapKey("gO", require("telescope.builtin").lsp_document_symbols, "Open Document Symbols")
+
+   mapKey("grt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
+   mapKey("<leader>9", function()
+      require("cpp_funcs").switchHeaderSourceForCurrentBuffer()
+   end, "")
+end
+
+local function enableHighlightWordsOnHover(event)
+   local client = vim.lsp.get_client_by_id(event.data.client_id)
+   if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+      local highlight_augroup = vim.api.nvim_create_augroup("lsp-hightlight", { clear = false })
+      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+         buffer = event.buf,
+         group = highlight_augroup,
+         callback = vim.lsp.buf.document_highlight,
+      })
+
+      vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+         buffer = event.buf,
+         group = highlight_augroup,
+         callback = vim.lsp.buf.clear_references,
+      })
+
+      vim.api.nvim_create_autocmd("LspDetach", {
+         group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
+         callback = function(event2)
+            vim.lsp.buf.clear_references()
+            vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
+         end,
+      })
+   end
+end
+
+local function enableInlineHints(event)
+   if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+      mapKey(event, "<leader>th", function()
+         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+      end, "[T]oggle inlay [H]ints")
+   end
+end
+
 return { -- LSP Configuration & Plugins
    {
       --
@@ -39,86 +128,9 @@ return { -- LSP Configuration & Plugins
          vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
             callback = function(event)
-               local map = function(keys, func, desc, mode)
-                  mode = mode or "n"
-                  vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
-               end
-
-               -- Rename variable, function, or any other code unit
-               map("grn", vim.lsp.buf.rename, "[R]e[n]ame")
-
-               -- Some useful actions you need under cursor like disabling diagnostic for a piece
-               -- of code. Not to write '# pyright: ignore ...' or smt like it. This mapping will
-               -- do it for user undependently of code language
-               map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
-
-               -- Searches for references of code unit under cursor
-               -- Works simular to RENAMING but provides (for this neovim configuration) ability
-               -- to show all variable (or smt else) instances inside telescope
-               map("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-
-               -- From kickstart. Maybe useful
-               map("gri", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-               map("grd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-
-               -- Default classic old jump logic
-               map("gf", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-               map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-               map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
-
-               --
-               map("gO", require("telescope.builtin").lsp_document_symbols, "Open Document Symbols")
-
-               map("grt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
-
-               -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
-               ---@param client vim.lsp.Client
-               ---@param method vim.lsp.protocol.Method
-               ---@param bufnr? integer some lsp support methods only in specific files
-               ---@return boolean
-               local function client_supports_method(client, method, bufnr)
-                  if vim.fn.has("nvim-0.11") == 1 then
-                     return client:supports_method(method, bufnr)
-                  else
-                     return client.supports_method(method, { bufnr = bufnr })
-                  end
-               end
-
-               -- Hightlight words under cursor
-               local client = vim.lsp.get_client_by_id(event.data.client_id)
-               if
-                  client
-                  and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf)
-               then
-                  local highlight_augroup = vim.api.nvim_create_augroup("lsp-hightlight", { clear = false })
-                  vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-                     buffer = event.buf,
-                     group = highlight_augroup,
-                     callback = vim.lsp.buf.document_highlight,
-                  })
-
-                  vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-                     buffer = event.buf,
-                     group = highlight_augroup,
-                     callback = vim.lsp.buf.clear_references,
-                  })
-
-                  vim.api.nvim_create_autocmd("LspDetach", {
-                     group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
-                     callback = function(event2)
-                        vim.lsp.buf.clear_references()
-                        vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
-                     end,
-                  })
-               end
-
-               if
-                  client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
-               then
-                  map("<leader>th", function()
-                     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
-                  end, "[T]oggle inlay [H]ints")
-               end
+               mapLspServer(event)
+               enableHighlightWordsOnHover(event)
+               enableInlineHints(event)
             end,
          })
 
@@ -150,11 +162,7 @@ return { -- LSP Configuration & Plugins
 
          -- Capabilities (extra lsp methods)
          local capabilities = require("blink.cmp").get_lsp_capabilities()
-
-         -- Enumeration of needed to be installed lsp-servers with settings
-         local util = require("lspconfig.util")
          local servers = {
-
             -->
             lua_ls = {
                settings = {

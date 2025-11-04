@@ -117,4 +117,63 @@ end, {
    nargs = "*",
 })
 
+vim.api.nvim_create_user_command("Impl2", function(opts)
+   local arg = opts.fargs[1] or "ref"
+   require("cpp_funcs").run(arg)
+end, {
+   nargs = "?",
+})
+
+vim.api.nvim_create_user_command("Resolve", function(opts)
+   local arg = opts.fargs[1] or "ref"
+   require("cpp_funcs").resolveTest(arg)
+end, { nargs = "?" })
+
+vim.api.nvim_create_user_command("Neig", function()
+   require("cpp_funcs").print_neighbors_under_cursor()
+end, {})
+
+vim.api.nvim_create_user_command("Decl", function()
+   local cpp = require("cpp_funcs")
+   cpp.get_neighbors_under_cursor(function(neigh)
+      for _, sym in pairs(neigh) do
+         cpp.find_symbol_impl(sym)
+         return
+      end
+   end)
+end, {})
+
+vim.api.nvim_create_user_command("NeigWin", function()
+   local cpp = require("cpp_funcs")
+   cpp.show_all_neighbors_under_cursor()
+end, {})
+
+vim.keymap.set("n", "<leader>8", function()
+   require("cpp_funcs").goto_definition_or_create_under_cursor()
+end, { desc = "Move focus to the upper window" })
+
+vim.keymap.set("n", "<leader>7", function()
+   require("cpp_funcs").show_all_neighbors_under_cursor()
+end, { desc = "Move focus to the upper window" })
+
+local function iso_timestamp()
+   local t = os.time()
+   local utc = os.time(os.date("!*t", t))
+   local diff = os.difftime(t, utc)
+
+   local sign = diff >= 0 and "+" or "-"
+   diff = math.abs(diff)
+   local hours = math.floor(diff / 3600)
+   local minutes = math.floor((diff % 3600) / 60)
+
+   return os.date("%Y-%m-%dT%H:%M:%S", t) .. string.format("%s%02d:%02d", sign, hours, minutes)
+end
+
+vim.api.nvim_create_user_command("Timestamp", function(opts)
+   local ts = iso_timestamp()
+   vim.api.nvim_put({ ts }, "c", true, true)
+end, {
+   -- nargs = "?",
+})
+
 return

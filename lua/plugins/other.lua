@@ -18,46 +18,46 @@ return {
    -- {
    --    "boltlessengineer/sense.nvim",
    -- },
-   {
-      "kiyoon/jupynium.nvim",
-      build = "sudo pacman -S python-jupynium", -- FIXME: Not working on ARCH
-      config = function()
-         require("jupynium").setup({})
-         vim.keymap.set("n", "<leader>jr", function()
-            vim.cmd("JupyniumStartAndAttachToServer")
-         end, { desc = "[j]upynium [r]tart" })
-
-         vim.keymap.set("n", "<leader>jsy", function()
-            vim.cmd("JupyniumStartSync")
-         end, { desc = "[j]upynium [s][y]nc" })
-      end,
-   },
-   {
-      "uga-rosa/ccc.nvim",
-      config = function()
-         vim.opt.termguicolors = true
-         local ccc = require("ccc")
-         ccc.setup({
-            highlighter = {
-               auto_enable = true,
-               lsp = true,
-            },
-         })
-      end,
-   },
-   {
-      "stevearc/oil.nvim",
-      ---@module 'oil'
-      ---@type oil.SetupOpts
-      opts = {},
-      -- Optional dependencies
-      dependencies = { { "echasnovski/mini.icons", opts = {} } },
-      -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
-      config = function()
-         vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-         require("oil").setup()
-      end,
-   },
+   -- {
+   --    "kiyoon/jupynium.nvim",
+   --    build = "sudo pacman -S python-jupynium", -- FIXME: Not working on ARCH
+   --    config = function()
+   --       require("jupynium").setup({})
+   --       vim.keymap.set("n", "<leader>jr", function()
+   --          vim.cmd("JupyniumStartAndAttachToServer")
+   --       end, { desc = "[j]upynium [r]tart" })
+   --
+   --       vim.keymap.set("n", "<leader>jsy", function()
+   --          vim.cmd("JupyniumStartSync")
+   --       end, { desc = "[j]upynium [s][y]nc" })
+   --    end,
+   -- },
+   -- {
+   --    "uga-rosa/ccc.nvim",
+   --    config = function()
+   --       vim.opt.termguicolors = true
+   --       local ccc = require("ccc")
+   --       ccc.setup({
+   --          highlighter = {
+   --             auto_enable = true,
+   --             lsp = true,
+   --          },
+   --       })
+   --    end,
+   -- },
+   -- {
+   --    "stevearc/oil.nvim",
+   --    ---@module 'oil'
+   --    ---@type oil.SetupOpts
+   --    opts = {},
+   --    -- Optional dependencies
+   --    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+   --    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+   --    config = function()
+   --       vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+   --       require("oil").setup()
+   --    end,
+   -- },
    {
       "dstein64/vim-startuptime",
    },
