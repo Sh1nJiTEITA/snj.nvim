@@ -1,6 +1,6 @@
 require("vim_options")
 require("autocmd")
-require("tex_launch")
+-- require("tex_launch")
 
 require("lazy").setup({
    -- require("plugins.snacks"),

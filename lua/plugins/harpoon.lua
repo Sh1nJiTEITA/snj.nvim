@@ -30,6 +30,7 @@ return {
    event = "VimEnter",
    config = function()
       local harpoon = require("harpoon")
+      local cpp = require("cpp").main
 
       vim.keymap.set("n", "<leader>aa", function()
          harpoon:list():add()
@@ -49,38 +50,35 @@ return {
          desc = "Toggle harpoon2 quick menu",
       })
 
-      vim.keymap.set("n", "<leader>1", function()
-         harpoon:list():select(1)
-      end, { desc = "Move harpoon2 => 1" })
-      vim.keymap.set("n", "<leader>2", function()
-         harpoon:list():select(2)
-      end, { desc = "Move harpoon2 => 2" })
-      vim.keymap.set("n", "<leader>3", function()
-         harpoon:list():select(3)
-      end, { desc = "Move harpoon2 => 3" })
-      vim.keymap.set("n", "<leader>4", function()
-         harpoon:list():select(4)
-      end, { desc = "Move harpoon2 => 4" })
+      local cpp_switch = function(item_idx)
+         local project_dir = harpoon:list().config:get_root_dir()
+         local after_path = harpoon:list():get(item_idx).value
+         local full_path = project_dir .. after_path
+         local buf = vim.uri_to_bufnr(vim.uri_from_fname(full_path))
+         local current_buf = vim.api.nvim_get_current_buf()
+         if buf ~= current_buf then
+            cpp.switchHeaderSourceForCurrentBufferSync()
+         else
+            harpoon:list():select(1)
+         end
+      end
 
-      vim.keymap.set("n", "<leader>5", function()
-         harpoon:list():select(5)
-      end, { desc = "Move harpoon2 => 5" })
+      local switch = function(item_idx)
+         -- if C++ or C
+         if vim.bo.filetype == "c" or vim.bo.filetype == "cpp" then
+            cpp_switch(item_idx)
+         else
+            if harpoon:list():get(item_idx) ~= nil then
+               harpoon:list():select(item_idx)
+            end
+         end
+      end
 
-      vim.keymap.set("n", "<leader>6", function()
-         harpoon:list():select(6)
-      end, { desc = "Move harpoon2 => 6" })
-
-      -- vim.keymap.set("n", "<leader>7", function()
-      --    harpoon:list():select(7)
-      -- end, { desc = "Move harpoon2 => 7" })
-
-      -- vim.keymap.set("n", "<leader>8", function()
-      --    harpoon:list():select(8)
-      -- end, { desc = "Move harpoon2 => 8" })
-
-      -- vim.keymap.set("n", "<leader>9", function()
-      --    harpoon:list():select(9)
-      -- end, { desc = "Move harpoon2 => 9" })
+      for i = 1, 6 do
+         vim.keymap.set("n", "<leader>" .. i, function()
+            switch(i)
+         end)
+      end
 
       -- Toggle previous & next buffers stored within Harpoon list
       vim.keymap.set("n", "<A-TAB>", function()
@@ -94,13 +92,6 @@ return {
          desc = "Go prev buffer via harpoon2",
       })
 
-      -- vim.keymap.set(
-      --    "n",
-      --    "<leader>j",
-      --    toggle_telescope(harpoon:list())({
-      --       desc = "Open harpoon2 list",
-      --    })
-      -- )
       local conf = require("telescope.config").values
       local function toggle_telescope(harpoon_files)
          local file_paths = {}

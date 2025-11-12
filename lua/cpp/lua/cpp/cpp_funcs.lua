@@ -33,12 +33,31 @@ function M.switchHeaderSourceForCurrentBuffer()
    local bufnr = vim.api.nvim_get_current_buf()
    local clangd = M.getClangd()
    if clangd == nil then
-      print("clangd not attached")
+      -- print("clangd not attached")
       return
    end
    clangd:request("textDocument/switchSourceHeader", {
       uri = vim.uri_from_bufnr(bufnr),
    }, switchHeaderSourceHandler, bufnr)
+end
+
+--- Tries to switch between h/cpp buffers
+function M.switchHeaderSourceForCurrentBufferSync()
+   local bufnr = vim.api.nvim_get_current_buf()
+   local clangd = M.getClangd()
+   if clangd == nil then
+      print("clangd not attached")
+      return
+   end
+   local resp = clangd:request_sync("textDocument/switchSourceHeader", {
+      uri = vim.uri_from_bufnr(bufnr),
+   }, 30, bufnr)
+   if resp ~= nil and resp.result ~= nil then
+      local buf = vim.uri_to_bufnr(resp.result) or vim.api.nvim_get_current_buf()
+      vim.api.nvim_set_current_buf(buf)
+      return true
+   end
+   return false
 end
 
 --- Test func
