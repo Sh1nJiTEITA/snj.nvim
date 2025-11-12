@@ -15,7 +15,7 @@ require("lazy").setup({
    require("plugins.themes"),
    require("plugins.mini"),
    require("plugins.treesitter"),
-   -- require("plugins.self"),
+   require("plugins.self"),
    -- require("plugins.obsidian"),
    require("plugins.yazi"),
    require("plugins.harpoon"),

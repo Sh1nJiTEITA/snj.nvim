@@ -119,22 +119,22 @@ end, {
 
 vim.api.nvim_create_user_command("Impl2", function(opts)
    local arg = opts.fargs[1] or "ref"
-   require("cpp_funcs").run(arg)
+   require("cpp").main.run(arg)
 end, {
    nargs = "?",
 })
 
 vim.api.nvim_create_user_command("Resolve", function(opts)
    local arg = opts.fargs[1] or "ref"
-   require("cpp_funcs").resolveTest(arg)
+   require("cpp").main.resolveTest(arg)
 end, { nargs = "?" })
 
 vim.api.nvim_create_user_command("Neig", function()
-   require("cpp_funcs").print_neighbors_under_cursor()
+   require("cpp").main.print_neighbors_under_cursor()
 end, {})
 
 vim.api.nvim_create_user_command("Decl", function()
-   local cpp = require("cpp_funcs")
+   local cpp = require("cpp").main
    cpp.get_neighbors_under_cursor(function(neigh)
       for _, sym in pairs(neigh) do
          cpp.find_symbol_impl(sym)
@@ -144,16 +144,23 @@ vim.api.nvim_create_user_command("Decl", function()
 end, {})
 
 vim.api.nvim_create_user_command("NeigWin", function()
-   local cpp = require("cpp_funcs")
+   local cpp = require("cpp").main
    cpp.show_all_neighbors_under_cursor()
 end, {})
 
 vim.keymap.set("n", "<leader>8", function()
-   require("cpp_funcs").goto_definition_or_create_under_cursor()
+   -- require("cpp").main.goto_definition_or_create_under_cursor()
+   --
+   local c = vim.api.nvim_win_get_cursor(0)
+   local buf = vim.api.nvim_get_current_buf()
+   require("cpp").lsp.apply_to_scope_items(buf, c[1] - 1, c[2], function(parent, symbol)
+      print(vim.inspect(parent))
+   end)
 end, { desc = "Move focus to the upper window" })
 
 vim.keymap.set("n", "<leader>7", function()
-   require("cpp_funcs").show_all_neighbors_under_cursor()
+   -- require("cpp").main.show_all_neighbors_under_cursor()
+   require("cpp").main.create_scope_window()
 end, { desc = "Move focus to the upper window" })
 
 local function iso_timestamp()

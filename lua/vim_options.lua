@@ -1,4 +1,3 @@
-vim.opt.relativenumber = true
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
@@ -33,7 +32,6 @@ vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
 vim.opt.conceallevel = 1
 -- vim.opt.laststatus = 3
-
 vim.filetype.add({
    extension = {
       vert = "glsl",

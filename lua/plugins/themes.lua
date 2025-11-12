@@ -90,7 +90,7 @@ return {
                h6 = "foam",
             },
          })
-         vim.cmd("colorscheme rose-pine")
+         vim.cmd.colorscheme("rose-pine")
          vim.api.nvim_set_hl(0, "TreesitterContextBottom", {
             underline = true,
             sp = "#c4a7e7", -- your desired underline color
