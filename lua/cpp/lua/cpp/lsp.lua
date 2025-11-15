@@ -1,5 +1,5 @@
 ---@meta
-M = {}
+local M = {}
 
 local ms = require("vim.lsp.protocol").Methods
 local sk = require("vim.lsp.protocol").SymbolKind

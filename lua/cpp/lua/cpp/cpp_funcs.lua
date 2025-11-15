@@ -1,7 +1,8 @@
----@meta
+---@module 'cpp.cpp_funcs'
+---@class CppFuncs
+local M = {}
 
-M = {}
-
+local utils = require("cpp.utils")
 local ms = require("vim.lsp.protocol").Methods
 local sk = require("vim.lsp.protocol").SymbolKind
 local lsp = require("cpp.lsp")
@@ -87,92 +88,6 @@ function M.run(how)
    end
 end
 
-local function create_blank_buffer()
-   local bufnr = vim.api.nvim_create_buf(false, true)
-   if bufnr == 0 then
-      print("cant create buffer")
-   end
-
-   vim.bo[bufnr].bufhidden = "delete"
-   vim.bo[bufnr].buftype = "nofile"
-   vim.bo[bufnr].swapfile = false
-   vim.bo[bufnr].buflisted = false
-
-   return bufnr
-end
-
-local function disable_win_decorations(winnr)
-   vim.wo[winnr].number = false
-   vim.wo[winnr].relativenumber = false
-   vim.wo[winnr].colorcolumn = ""
-   vim.wo[winnr].cursorline = false
-   vim.wo[winnr].signcolumn = "no"
-   vim.wo[winnr].linebreak = false
-end
-
---- @class WindowSize
---- @field row integer
---- @field col integer
---- @field width integer
---- @field height integer
-
---- @class WindowCreationInfo : WindowSize
---- @field win integer
---- @field buf integer
-
---- @param sz WindowSize
---- @param _config table
---- @return WindowCreationInfo
-local function create_window(sz, _config)
-   local config = _config
-      or {
-         relative = "editor",
-         border = "rounded",
-         style = "minimal",
-         footer = "cpp pointer",
-      }
-
-   config = vim.tbl_extend("force", config, {
-      col = sz.col,
-      width = sz.width,
-      row = sz.row,
-      height = sz.height,
-   })
-
-   local buf = create_blank_buffer()
-   local win = vim.api.nvim_open_win(buf, false, config)
-   disable_win_decorations(win)
-
-   return vim.tbl_extend("force", sz, {
-      win = win,
-      buf = buf,
-   })
-end
-
-function calc_window_sizes()
-   local w = math.ceil(vim.o.columns * 0.7)
-   local h = math.ceil(vim.o.lines * 0.7) - 2
-   local row = math.ceil((vim.o.lines - h) / 2)
-   local col = math.ceil((vim.o.columns - w) / 2)
-
-   local intr_w = 3
-
-   return {
-      intr_win_sz = { --- @type WindowSize
-         row = row,
-         col = col,
-         width = intr_w,
-         height = h,
-      },
-      view_win_sz = { --- @type WindowSize
-         row = row,
-         col = col + intr_w + 2,
-         width = w - intr_w - 2,
-         height = h,
-      },
-   }
-end
-
 ---@class OverviewWindow
 ---@field winnr integer
 ---@field width integer
@@ -180,64 +95,7 @@ end
 ---@field row integer
 ---@field col integer
 
-local function create_overview_windows()
-   local shared_config = {
-      relative = "editor",
-      border = "rounded",
-      style = "minimal",
-      footer = "cpp pointer",
-   }
-
-   local szs = calc_window_sizes()
-   local intr_win_info = create_window(szs.intr_win_sz, shared_config)
-   local view_win_info = create_window(szs.view_win_sz, shared_config)
-   vim.api.nvim_buf_set_option(view_win_info.buf, "filetype", "cpp")
-
-   local cleanup = function()
-      --- @param window_info WindowCreationInfo
-      local cleanup_win = function(window_info)
-         if vim.api.nvim_win_is_valid(window_info.win) then
-            vim.api.nvim_win_close(window_info.win, true)
-         end
-
-         if vim.api.nvim_buf_is_valid(window_info.buf) then
-            vim.api.nvim_buf_delete(window_info.buf, { force = true })
-         end
-      end
-
-      cleanup_win(intr_win_info)
-      cleanup_win(view_win_info)
-   end
-
-   vim.api.nvim_set_current_win(intr_win_info.win)
-   vim.api.nvim_create_autocmd({ "BufHidden", "BufLeave" }, {
-      buffer = intr_win_info.buf,
-      callback = cleanup,
-   })
-
-   vim.api.nvim_create_autocmd({ "VimResized" }, {
-      callback = function()
-         --- @param win_info WindowCreationInfo
-         --- @param win_sz WindowSize
-         local update_win_sz = function(win_info, win_sz)
-            win_info = vim.tbl_extend("force", win_info, win_sz)
-            local config = vim.tbl_extend("force", win_sz, shared_config)
-            vim.api.nvim_win_set_config(win_info.win, config)
-         end
-
-         local szs = calc_window_sizes()
-         update_win_sz(intr_win_info, szs.intr_win_sz)
-         update_win_sz(view_win_info, szs.view_win_sz)
-      end,
-   })
-
-   vim.api.nvim_buf_set_keymap(intr_win_info.buf, "n", "q", "", { callback = cleanup })
-
-   return {
-      intr_win_info = intr_win_info, --- @type WindowCreationInfo
-      view_win_info = view_win_info, --- @type WindowCreationInfo
-   }
-end
+local function create_overview_windows() end
 
 local function is_function_inline_definition(buf, sym)
    local uri = vim.uri_from_bufnr(buf)
@@ -292,9 +150,9 @@ function M.create_scope_window()
             goto continue
          end
 
-         if is_function_inline_definition(source_buf, sym) then
-            goto continue
-         end
+         -- if is_function_inline_definition(source_buf, sym) then
+         --    goto continue
+         -- end
 
          local item = vim.api.nvim_buf_get_text(
             source_buf,
@@ -341,7 +199,7 @@ local function create_neighbors_window()
 
    -- 2. Create the outer "shell" window. It's not focusable.
    -- This window's only job is to draw the border and footer.
-   local border_buf = create_blank_buffer()
+   local border_buf = utils.create_blank_buffer()
    local border_winnr = vim.api.nvim_open_win(border_buf, false, { -- Note: `enter` is false
       relative = "editor",
       width = total_w,
@@ -366,9 +224,9 @@ local function create_neighbors_window()
 
    -- 4. Create the actual buffers for your content.
    local source_bufnr = vim.api.nvim_get_current_buf()
-   local code_bufnr = create_blank_buffer()
+   local code_bufnr = utils.create_blank_buffer()
    vim.api.nvim_buf_set_option(code_bufnr, "filetype", "cpp")
-   local interaction_bufnr = create_blank_buffer()
+   local interaction_bufnr = utils.create_blank_buffer()
 
    -- 5. Create the two inner windows, without borders, positioned inside the shell.
    -- The first window created with `enter = true` will receive focus.
@@ -389,8 +247,8 @@ local function create_neighbors_window()
    })
 
    -- 6. Apply window options and setup cleanup.
-   disable_win_decorations(code_winnr)
-   disable_win_decorations(interaction_winnr)
+   utils.disable_win_decorations(code_winnr)
+   utils.disable_win_decorations(interaction_winnr)
 
    local cleanup = function()
       -- Make sure to clean up ALL windows and buffers that were created.
