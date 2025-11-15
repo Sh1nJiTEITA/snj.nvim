@@ -68,7 +68,10 @@ end, {
 })
 
 vim.api.nvim_create_user_command("UI", function(opts)
-   local _ = require("cpp")
+   local mod = require("cpp")
+   local ui = mod.win.ScopeUI:new()
+   ui:update_scope()
+   ui:update_wins()
 end, {})
 
 return

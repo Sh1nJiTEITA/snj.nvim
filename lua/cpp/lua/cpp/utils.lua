@@ -58,7 +58,7 @@ function M.create_window(sz, config)
       height = sz.height,
    })
 
-   local buf = M.create_blank_buffer()
+   local buf = M.create_blank_buf()
    local win = vim.api.nvim_open_win(buf, false, _config)
    M.disable_win_decorations(win)
 
