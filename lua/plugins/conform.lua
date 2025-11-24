@@ -27,7 +27,7 @@ return {
          lua = { "stylua" },
          cpp = { "clang_format" },
          c = { "clang_format" },
-         python = { "isort", "black" },
+         -- python = { "isort", "black" },
          yaml = { "yamlfix" },
          -- javascript = { "biome", "biome-organize-imports" },
          -- javascriptreact = { "biome", "biome-organize-imports" },

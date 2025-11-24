@@ -139,7 +139,7 @@ local function filter_scope_items(items)
       ::continue::
    end
 
-   return filtered
+   return items
 end
 
 --- @param x? integer X-pos to resolve scope from
@@ -184,12 +184,12 @@ function ScopeUI:capture_and_format_item(sym)
       {}
    )
 
-   local total = ""
-   for _, part in ipairs(sym_text) do
-      local no_space = part:match("^%s*(.*)$") or part
-      total = total .. " " .. no_space
-   end
-   total = total .. ";"
+   -- local total = ""
+   -- for _, part in ipairs(sym_text) do
+   --    local no_space = part:match("^%s*(.*)$") or part
+   --    total = total .. " " .. no_space
+   -- end
+   local total = lsp.get_symbol_text(self.source_buf, sym) -- .. ";"
 
    local view_width = #total
    local width_per_row = self.win_datas.view_win_info.width

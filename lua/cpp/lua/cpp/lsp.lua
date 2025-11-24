@@ -193,6 +193,34 @@ function M.find_scope_symbols(symbols, row, col)
    return nil
 end
 
+--- @param str string
+--- @return string
+local function flatten_text(str)
+   return str:gsub("%s%s+", " "):gsub("\n", "")
+end
+
+--- @param buf integer
+--- @param sym Symbol
+--- @return string
+function M.get_symbol_text(buf, sym)
+   local _begin = sym.range["start"].line
+   local _end = sym.range["end"].line
+   local lines = vim.api.nvim_buf_get_lines(buf, _begin, _end + 1, false)
+   return flatten_text(table.concat(lines, " "))
+end
+
+--- @param buf integer
+--- @param sym Symbol
+--- @return string
+function M.get_symbol_select_text(buf, sym)
+   local _begin = sym.selectionRange["start"].line
+   local _end = sym.selectionRange["end"].line
+   local lines = vim.api.nvim_buf_get_lines(buf, _begin, _end, false)
+   return flatten_text(table.concat(lines, " "))
+end
+
+-------------------------------------------------------------------------------
+
 --- @param buf integer
 --- @param row integer
 --- @param col integer
