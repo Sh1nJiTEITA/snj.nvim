@@ -171,15 +171,23 @@ return { -- LSP Configuration & Plugins
                   },
                },
             },
-            -- ["clang-format"] = {},
-            pyright = {},
+            basedpyright = {
+               -- Using Ruff's import organizer
+               disableOrganizeImports = true,
+            },
             clangd = {},
-            -- cmake_language_server = {},
+            ["cmake-language-server"] = {},
+            glsl_analyzer = {},
+            gopls = {},
+            zls = {},
+            texlab = {},
+            ["css-lsp"] = {},
+            ["json-lsp"] = {},
             -- glslls = {},
          }
 
          local ensure_installed = vim.tbl_keys(servers or {})
-         vim.list_extend(ensure_installed, { "stylua" })
+         vim.list_extend(ensure_installed, { "stylua", "ruff" })
          require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
          require("mason-lspconfig").setup({

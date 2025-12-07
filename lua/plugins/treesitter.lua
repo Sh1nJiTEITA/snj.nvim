@@ -40,6 +40,7 @@ return { -- Highlight, edit, and navigate code
             "comment",
             "cpp",
             "doxygen",
+            "markdown_inline",
          },
          -- Autoinstall languages that are not installed
          auto_install = true,
@@ -61,6 +62,18 @@ return { -- Highlight, edit, and navigate code
             tesse = "glsl",
             tessc = "glsl",
          })
+
+         --          vim.treesitter.query.set(
+         --             "python",
+         --             "injections",
+         --             [[
+         -- (
+         --   (string_content) @injection.content
+         --   (#match? @injection.content "```py")
+         --   (#set! injection.language "python")
+         -- )
+         -- ]]
+         --          )
       end,
    },
    -- {
