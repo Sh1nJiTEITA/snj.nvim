@@ -27,12 +27,12 @@ return {
          lua = { "stylua" },
          cpp = { "clang_format" },
          c = { "clang_format" },
-         python = { "isort", "black" },
+         python = {
+            "ruff_fix",
+            "ruff_format",
+         },
          yaml = { "yamlfix" },
-         -- javascript = { "biome", "biome-organize-imports" },
-         -- javascriptreact = { "biome", "biome-organize-imports" },
-         -- typescript = { "biome", "biome-organize-imports" },
-         -- typescriptreact = { "biome", "biome-organize-imports" },
+         json = { "fixjson" },
       },
    },
 }

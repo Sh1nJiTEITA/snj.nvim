@@ -1,5 +1,5 @@
 ---@meta
-M = {}
+local M = {}
 
 local ms = require("vim.lsp.protocol").Methods
 local sk = require("vim.lsp.protocol").SymbolKind
@@ -51,7 +51,7 @@ end
 --- @param row integer
 --- @param col integer
 --- @param parent Symbol
---- @return table|nil
+--- @return { symbol: Symbol, parent: Symbol } | nil
 function M.find_parent_symbol(row, col, parent)
    for _, sym in ipairs(parent.children) do
       if is_under(row, col, sym) then
@@ -131,7 +131,7 @@ function M.find_symbol_impl(symbol)
       },
    }, function(err, result)
       if err then
-         print(vim.inspect(err))
+         vim.notify(vim.inspect(err), "error")
          return
       end
       -- print(vim.inspect(result))
@@ -157,6 +157,69 @@ function M.get_neighbors_under_cursor(buf, apply_to_neighbors)
       end
    end)
 end
+
+--- @param bufnr integer Buffer vim ID
+--- @return Symbol[]?
+function M.get_document_symbols(bufnr)
+   local resp = vim.lsp.buf_request_sync(bufnr, ms.textDocument_documentSymbol, {
+      textDocument = { uri = vim.uri_from_bufnr(bufnr) },
+   }, 1000)
+
+   if resp == nil then
+      return nil
+   end
+
+   for _, results in pairs(resp) do
+      if results.result then
+         return results.result
+      end
+   end
+
+   return nil
+end
+
+--- @param symbols Symbol[]
+--- @param row? integer
+--- @param col? integer
+--- @return { scope_symbol: Symbol, current_symbol: Symbol }?
+function M.find_scope_symbols(symbols, row, col)
+   local cursor = vim.api.nvim_win_get_cursor(0)
+   row = row or cursor[1] - 1 -- zero based
+   col = col or cursor[2] -- one based
+   local found = M.find_parent_symbol(row, col, { children = symbols })
+   if found then
+      return { scope_symbol = found.parent, current_symbol = found.symbol }
+   end
+   return nil
+end
+
+--- @param str string
+--- @return string
+local function flatten_text(str)
+   return str:gsub("%s%s+", " "):gsub("\n", "")
+end
+
+--- @param buf integer
+--- @param sym Symbol
+--- @return string
+function M.get_symbol_text(buf, sym)
+   local _begin = sym.range["start"].line
+   local _end = sym.range["end"].line
+   local lines = vim.api.nvim_buf_get_lines(buf, _begin, _end + 1, false)
+   return flatten_text(table.concat(lines, " "))
+end
+
+--- @param buf integer
+--- @param sym Symbol
+--- @return string
+function M.get_symbol_select_text(buf, sym)
+   local _begin = sym.selectionRange["start"].line
+   local _end = sym.selectionRange["end"].line
+   local lines = vim.api.nvim_buf_get_lines(buf, _begin, _end, false)
+   return flatten_text(table.concat(lines, " "))
+end
+
+-------------------------------------------------------------------------------
 
 --- @param buf integer
 --- @param row integer
