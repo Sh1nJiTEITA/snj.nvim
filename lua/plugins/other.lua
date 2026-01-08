@@ -18,20 +18,24 @@ return {
    -- {
    --    "boltlessengineer/sense.nvim",
    -- },
-   -- {
-   --    "kiyoon/jupynium.nvim",
-   --    build = "sudo pacman -S python-jupynium", -- FIXME: Not working on ARCH
-   --    config = function()
-   --       require("jupynium").setup({})
-   --       vim.keymap.set("n", "<leader>jr", function()
-   --          vim.cmd("JupyniumStartAndAttachToServer")
-   --       end, { desc = "[j]upynium [r]tart" })
-   --
-   --       vim.keymap.set("n", "<leader>jsy", function()
-   --          vim.cmd("JupyniumStartSync")
-   --       end, { desc = "[j]upynium [s][y]nc" })
-   --    end,
-   -- },
+   {
+      "kiyoon/jupynium.nvim",
+      -- build = "sudo pacman -S python-jupynium", -- FIXME: Not working on ARCH
+      config = function()
+         require("jupynium").setup({})
+         vim.keymap.set("n", "<leader>jr", function()
+            vim.cmd("JupyniumStartAndAttachToServer")
+         end, { desc = "[j]upynium s[r]tart" })
+
+         vim.keymap.set("n", "<leader>jsy", function()
+            vim.cmd("JupyniumStartSync")
+         end, { desc = "[j]upynium [s][y]nc" })
+
+         vim.keymap.set("n", "<leader>jss", function()
+            vim.cmd("JupyniumStopSync")
+         end, { desc = "[j]upynium [s]top [s]ync" })
+      end,
+   },
    -- {
    --    "uga-rosa/ccc.nvim",
    --    config = function()
