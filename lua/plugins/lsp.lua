@@ -171,12 +171,17 @@ return { -- LSP Configuration & Plugins
                   },
                },
             },
-            basedpyright = {
+            -- basedpyright = {
+            --    -- Using Ruff's import organizer
+            --    disableOrganizeImports = true,
+            -- },
+            pyright = {
                -- Using Ruff's import organizer
                disableOrganizeImports = true,
             },
+
             clangd = {},
-            ["cmake-language-server"] = {},
+            -- ["cmake-language-server"] = {},
             glsl_analyzer = {},
             gopls = {},
             zls = {},
@@ -315,7 +320,7 @@ return { -- LSP Configuration & Plugins
          signature = { enabled = true, window = { border = "rounded" } },
       },
    },
-   {
-      "nvim-treesitter/playground",
-   },
+   -- {
+   --    "nvim-treesitter/playground",
+   -- },
 }

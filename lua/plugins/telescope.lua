@@ -1,7 +1,7 @@
 return {
    "nvim-telescope/telescope.nvim",
    event = "VimEnter",
-   branch = "0.1.x",
+   -- branch = "0.1.x",
    dependencies = {
       "nvim-lua/plenary.nvim",
       {
@@ -13,16 +13,6 @@ return {
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
       { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
-      {
-         "andrew-george/telescope-themes",
-         config = function()
-            vim.keymap.set("n", "<leader>st", ":Telescope themes<CR>", {
-               desc = "[S]earch [T]hemes",
-               noremap = true,
-               silent = true,
-            })
-         end,
-      },
    },
    config = function()
       require("telescope").setup({
@@ -31,12 +21,15 @@ return {
                require("telescope.themes").get_dropdown(),
             },
          },
-         pickers = {
-            find_files = {
-               hidden = true,
-            },
-         },
+         -- pickers = {
+         --    find_files = {
+         --       hidden = true,
+         --    },
+         -- },
          defaults = {
+            preview = {
+               treesitter = false,
+            },
             file_ignore_patterns = {
                ".git/.*",
                ".github/.*",
@@ -48,7 +41,7 @@ return {
       -- Enable Telescope extensions if they are installed
       pcall(require("telescope").load_extension, "fzf")
       pcall(require("telescope").load_extension, "ui-select")
-      pcall(require("telescope").load_extension, "themes")
+      -- pcall(require("telescope").load_extension, "themes")
 
       require("keymaps").init_telescope_keymaps(require("telescope.builtin"))
    end,

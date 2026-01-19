@@ -1,16 +1,16 @@
 return {
-   {
-      "shellRaining/hlchunk.nvim",
-      event = { "BufReadPre", "BufNewFile" },
-      config = function()
-         require("hlchunk").setup({
-            chunk = { enable = false },
-            indent = {
-               enable = true,
-            },
-         })
-      end,
-   },
+   -- {
+   --    "shellRaining/hlchunk.nvim",
+   --    event = { "BufReadPre", "BufNewFile" },
+   --    config = function()
+   --       require("hlchunk").setup({
+   --          chunk = { enable = false },
+   --          indent = {
+   --             enable = true,
+   --          },
+   --       })
+   --    end,
+   -- },
 
    -- {
    --    "chaoren/vim-wordmotion",
@@ -62,70 +62,124 @@ return {
    --       require("oil").setup()
    --    end,
    -- },
-   {
-      "dstein64/vim-startuptime",
-   },
-   {
-      "danymat/neogen",
-      config = function()
-         require("neogen").setup({
-            enabled = true,
-            input_after_comment = true,
-            languages = {
-               cpp = {
-                  template = {
-                     annotation_convention = "doxygen",
-                     -- override templates directly
-                     templates = {
-                        func = {
-                           { nil, "//! ${1:Brief description}" },
-                           { nil, "//!" },
-                           { nil, "//! @param ${2:param} ${3:description}" },
-                           { nil, "//! @return ${4:description}" },
-                        },
-                     },
-                  },
-               },
-            },
-         })
-      end,
-      dependencies = {
-         "nvim-treesitter/nvim-treesitter",
-      },
-   },
-   { "xiyaowong/transparent.nvim" },
-   { "tpope/vim-sleuth" },
+   -- {
+   --    "dstein64/vim-startuptime",
+   -- },
+   -- {
+   --    "danymat/neogen",
+   --    config = function()
+   --       require("neogen").setup({
+   --          enabled = true,
+   --          input_after_comment = true,
+   --          languages = {
+   --             cpp = {
+   --                template = {
+   --                   annotation_convention = "doxygen",
+   --                   -- override templates directly
+   --                   templates = {
+   --                      func = {
+   --                         { nil, "//! ${1:Brief description}" },
+   --                         { nil, "//!" },
+   --                         { nil, "//! @param ${2:param} ${3:description}" },
+   --                         { nil, "//! @return ${4:description}" },
+   --                      },
+   --                   },
+   --                },
+   --             },
+   --          },
+   --       })
+   --    end,
+   --    dependencies = {
+   --       "nvim-treesitter/nvim-treesitter",
+   --    },
+   -- },
+   -- { "xiyaowong/transparent.nvim" },
+   -- { "tpope/vim-sleuth" },
 
-   {
-      "numToStr/Comment.nvim",
-      opts = {
-         toggler = {
-            line = "gcc",
-            block = "gbc",
-         },
-      },
-   },
+   -- {
+   --    "numToStr/Comment.nvim",
+   --    opts = {
+   --       toggler = {
+   --          line = "gcc",
+   --          block = "gbc",
+   --       },
+   --    },
+   -- },
    {
       "folke/which-key.nvim",
       event = "VimEnter",
-      config = function()
-         require("which-key").setup({
-            win = {
-               no_overlap = true,
-               padding = { 0, 0 },
-               title = true,
-               title_pos = "center",
-               zindex = 1000,
-               border = "rounded", -- <-- Add this line
-               bo = {},
-               wo = {
-                  -- winblend = 10,
-               },
+      -- config = function()
+      --    require("which-key").setup({
+      --       win = {
+      --          no_overlap = true,
+      --          padding = { 0, 0 },
+      --          title = true,
+      --          title_pos = "center",
+      --          zindex = 1000,
+      --          border = "rounded", -- <-- Add this line
+      --          bo = {},
+      --          wo = {
+      --             -- winblend = 10,
+      --          },
+      --       },
+      --    })
+      --    local keymaps_module = require("keymaps")
+      --    require("which-key").add(keymaps_module.init_whichkey_keymaps())
+      -- end,
+      opts = {
+         delay = 0,
+         icons = {
+            mappings = vim.g.have_nerd_font,
+            keys = vim.g.have_nerd_font and {} or {
+               Up = "<Up> ",
+               Down = "<Down> ",
+               Left = "<Left> ",
+               Right = "<Right> ",
+               C = "<C-…> ",
+               M = "<M-…> ",
+               D = "<D-…> ",
+               S = "<S-…> ",
+               CR = "<CR> ",
+               Esc = "<Esc> ",
+               ScrollWheelDown = "<ScrollWheelDown> ",
+               ScrollWheelUp = "<ScrollWheelUp> ",
+               NL = "<NL> ",
+               BS = "<BS> ",
+               Space = "<Space> ",
+               Tab = "<Tab> ",
+               F1 = "<F1>",
+               F2 = "<F2>",
+               F3 = "<F3>",
+               F4 = "<F4>",
+               F5 = "<F5>",
+               F6 = "<F6>",
+               F7 = "<F7>",
+               F8 = "<F8>",
+               F9 = "<F9>",
+               F10 = "<F10>",
+               F11 = "<F11>",
+               F12 = "<F12>",
             },
-         })
-         local keymaps_module = require("keymaps")
-         require("which-key").add(keymaps_module.init_whichkey_keymaps())
-      end,
+         },
+
+         -- Document existing key chains
+         spec = {
+            { "<leader>s", group = "[S]earch" },
+            { "<leader>t", group = "[T]oggle" },
+            { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+         },
+
+         win = {
+            no_overlap = true,
+            padding = { 0, 0 },
+            title = true,
+            title_pos = "center",
+            zindex = 1000,
+            border = "rounded",
+            bo = {},
+            wo = {},
+         },
+      },
    },
 
    -- Highlight todo, notes, etc in comments
@@ -135,6 +189,7 @@ return {
       dependencies = { "nvim-lua/plenary.nvim" },
       opts = { signs = false },
    },
+
    {
       "kawre/leetcode.nvim",
       -- build = ":TSUpdate html", -- if you have `nvim-treesitter` installed

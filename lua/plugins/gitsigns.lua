@@ -24,7 +24,7 @@ return {
          end
       end
       -- disable signs at start (because its already enabled)
-      toggleSigns()
+      -- toggleSigns()
 
       vim.keymap.set("n", "<leader>ts", toggleSigns, { desc = "[T]oggle git [S]ings" })
 

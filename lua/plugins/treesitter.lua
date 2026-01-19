@@ -1,30 +1,33 @@
 return { -- Highlight, edit, and navigate code
-   {
-      "nvim-treesitter/nvim-treesitter-context",
-      opts = {
-         multiwindow = true,
-         mode = "topline",
-         -- multiline_threshold = 2,
-         -- zindex = 2,
-         max_lines = 2,
-         patterns = {
-            cpp = {
-               "class",
-               "function",
-               "method",
-            },
-         },
-      },
-      config = function(_, opts)
-         require("treesitter-context").setup(opts)
-         vim.keymap.set("n", "[c", function()
-            require("treesitter-context").go_to_context(vim.v.count1)
-         end, { silent = true })
-      end,
-   },
+   -- {
+   --    "nvim-treesitter/nvim-treesitter-context",
+   --    opts = {
+   --       multiwindow = true,
+   --       mode = "topline",
+   --       -- multiline_threshold = 2,
+   --       -- zindex = 2,
+   --       max_lines = 2,
+   --       patterns = {
+   --          cpp = {
+   --             "class",
+   --             "function",
+   --             "method",
+   --          },
+   --       },
+   --    },
+   --    config = function(_, opts)
+   --       require("treesitter-context").setup(opts)
+   --       vim.keymap.set("n", "[c", function()
+   --          require("treesitter-context").go_to_context(vim.v.count1)
+   --       end, { silent = true })
+   --    end,
+   -- },
    {
       "nvim-treesitter/nvim-treesitter",
+      -- commit = "f42378a9",
+      commit = "42fc28ba",
       build = ":TSUpdate",
+      main = "nvim-treesitter.configs", -- Sets main module to use for opts
       opts = {
          ensure_installed = {
             "latex",
@@ -50,31 +53,30 @@ return { -- Highlight, edit, and navigate code
          },
          indent = { enable = true, disable = { "ruby" } },
       },
-      config = function(_, opts)
-         require("nvim-treesitter.install").prefer_git = true
-         ---@diagnostic disable-next-line: missing-fields
-         require("nvim-treesitter.configs").setup(opts)
-         vim.filetype.add({
-            vert = "glsl",
-            frag = "glsl",
-            geom = "glsl",
-            comp = "glsl",
-            tesse = "glsl",
-            tessc = "glsl",
-         })
-
-         --          vim.treesitter.query.set(
-         --             "python",
-         --             "injections",
-         --             [[
-         -- (
-         --   (string_content) @injection.content
-         --   (#match? @injection.content "```py")
-         --   (#set! injection.language "python")
-         -- )
-         -- ]]
-         --          )
-      end,
+      -- config = function(_, opts)
+      --    require("nvim-treesitter.install").prefer_git = true
+      --    ---@diagnostic disable-next-line: missing-fields
+      --    require("nvim-treesitter.config").setup(opts)
+      --    vim.filetype.add({
+      --       vert = "glsl",
+      --       frag = "glsl",
+      --       geom = "glsl",
+      --       comp = "glsl",
+      --       tesse = "glsl",
+      --       tessc = "glsl",
+      --    })
+      --
+      --    --          vim.treesitter.query.set(
+      --    --             "python",
+      --    --             "injections",
+      --    --             [[
+      --    -- (
+      --    --   (string_content) @injection.content
+      --    --   (#match? @injection.content "```py")
+      --    --   (#set! injection.language "python")
+      --    -- )
+      --    -- ]]
+      -- end,
    },
    -- {
    --    "NvChad/nvim-colorizer.lua",
