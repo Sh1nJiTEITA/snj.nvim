@@ -3,7 +3,7 @@ vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
 
 vim.opt.number = true
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 -- vim.opt.relativenumber = false
 vim.opt.mouse = "a"
 -- vim.opt.mouse = ""
@@ -20,7 +20,7 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.list = false
 vim.opt.inccommand = "split"
-vim.opt.cursorline = false
+vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 vim.opt.hlsearch = true

@@ -1,5 +1,6 @@
 require("vim_options")
 require("autocmd")
+require("keymaps")
 
 require("lazy").setup({
    require("plugins.other"),
