@@ -7,6 +7,7 @@ require("lazy").setup({
    require("plugins.gitsigns"),
    require("plugins.telescope"),
    require("plugins.lsp"),
+   require("plugins.dap"),
    require("plugins.conform"),
    require("plugins.themes"),
    require("plugins.mini"),
