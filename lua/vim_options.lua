@@ -25,8 +25,12 @@ vim.opt.scrolloff = 10
 
 vim.opt.hlsearch = true
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
+
+vim.g.netrw_keepdir = 0
+vim.g.netrw_banner = 0 -- Optional: hides the big help text at the top
+
 vim.opt.termguicolors = true
 vim.opt.conceallevel = 1
 

@@ -59,6 +59,7 @@ local function lsp_highlighting(client, bufnr)
 end
 
 return {
+	{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -116,16 +117,60 @@ return {
 						"--function-arg-placeholders",
 					},
 				},
-				lua_ls = { settings = { Lua = { completion = { callSnippet = "Replace" } } } },
+				lua_ls = {
+					settings = {
+						Lua = {
+							completion = { callSnippet = "Replace" },
+							diagnostics = {
+								globals = { "vim" },
+							},
+							workspace = {
+								-- Make the server aware of Neovim runtime files
+								library = vim.api.nvim_get_runtime_file("", true),
+								checkThirdParty = false,
+							},
+						},
+					},
+				},
 				pyright = { settings = { python = { analysis = { autoImportCompletions = true } } } },
 
-				shfmt = {},
-				shellcheck = {},
+				vtsls = {},
+				vtsls = {
+					filetypes = {
+						"javascript",
+						"javascriptreact",
+						"javascript.jsx",
+						"typescript",
+						"typescriptreact",
+						"typescript.tsx",
+						"vue",
+					},
+					settings = {
+						vtsls = {
+							tsserver = {
+								globalPlugins = {
+									{
+										name = "@vue/typescript-plugin",
+										location = vim.fn.stdpath("data")
+											.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+										languages = { "vue" },
+									},
+								},
+							},
+						},
+					},
+				},
+
 				bashls = {},
 			}
 
 			require("mason-tool-installer").setup({
-				ensure_installed = vim.list_extend(vim.tbl_keys(servers), { "stylua", "ruff" }),
+				ensure_installed = vim.list_extend(vim.tbl_keys(servers), {
+					"stylua",
+					"ruff",
+					"shfmt",
+					"shellcheck",
+				}),
 			})
 
 			require("mason-lspconfig").setup({
