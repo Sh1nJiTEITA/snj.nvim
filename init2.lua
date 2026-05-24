@@ -245,157 +245,227 @@ do
 		end,
 	})
 
-	---Because most plugins are hosted on GitHub, you can use the helper
-	---function to have less repetition in the following sections.
-	---@param repo string
-	---@return string
-	local function gh(repo)
-		return "https://github.com/" .. repo
-	end
-
-	---@type PluginMetadata[]
-	local plugins_metas = {}
-
-	---@param meta PluginMetadata
-	local add_plugin = function(meta)
-		if meta.deps ~= nil then
-		end
-	end
-
-	---@param url string Config name
-	---@param local_name string | nil Config name
-	---@param config table | nil | function Potential config implementation:
-	---a) If nil is provided empty table is forwarded to setup function
-	---b) If table will be forwarded to plugin setup function
-	---c) If function is provided and it returns table this result will be
-	---   forwarded to setup function
-	---d) If function is provided without return value no plugin setup is
-	---   invoked
-	local function add_plugin_(url, local_name, config)
-		if local_name == nil then
-			local autoname = url:match(".*/(.*)$")
-			if autoname ~= nil then
-				local_name = autoname:gsub("%.nvim", "")
-			end
-		end
-
-		vim.notify('Installing plugin with name="' .. local_name .. '"', vim.log.levels.INFO)
-
-		vim.pack.add({ { src = url, name = local_name } })
-
-		local tbl_config = config
-
-		if type(tbl_config) == "function" then
-			tbl_config = tbl_config()
-		end
-
-		if type(tbl_config) == "table" then
-			require(local_name).setup(tbl_config)
-		else
-			require(local_name).setup({})
-		end
-	end
-
 	do
-		add_plugin_(gh("NMAC427/guess-indent.nvim"))
-		add_plugin_(gh("folke/tokyonight.nvim"), nil, function()
-			require("tokyonight").setup({})
-			vim.cmd.colorscheme("tokyonight-night")
-		end)
+		local man = require("plman")
 
-		-- 	add_plugin(gh("nvim-tree/nvim-web-devicons"))
+		man.add_plugin({ gh = "NMAC427/guess-indent.nvim" })
+		man.add_plugin({
+			gh = "folke/tokyonight.nvim",
+			alias = "tokyonight",
+			config = function()
+				require("tokyonight").setup({})
+				vim.cmd.colorscheme("tokyonight-night")
+			end,
+		})
+
+		man.add_plugin({ gh = "nvim-tree/nvim-web-devicons" })
+
+		man.add_plugin({
+			gh = "lewis6991/gitsigns.nvim",
+			config = function()
+				local module = require("gitsigns")
+
+				module.setup({
+					signs = {
+						add = { text = "+" },
+						change = { text = "~" },
+						delete = { text = "_" },
+						topdelete = { text = "‾" },
+						changedelete = { text = "~" },
+					},
+					word_diff = false,
+				})
+
+				local toggleSigns = function()
+					local vim_status = vim.opt.signcolumn:get()
+					if vim_status == "yes" then
+						vim.opt.signcolumn = "no"
+						module.toggle_signs(false)
+					else
+						vim.opt.signcolumn = "yes"
+						module.toggle_signs(true)
+					end
+				end
+
+				vim.keymap.set("n", "<leader>ts", toggleSigns, { desc = "[T]oggle git [S]ings" })
+
+				-- show preview inside code of changed from last commit code
+				vim.keymap.set("n", "<leader>pq", module.preview_hunk_inline, { desc = "[P]review hunk" })
+
+				-- show panel on the left with history of git changes
+				vim.keymap.set("n", "<leader>pB", module.blame, { desc = "[P]review [B]lame panel" })
+				vim.keymap.set("n", "<leader>pb", module.blame_line, { desc = "[P]review [B]lame line" })
+				vim.keymap.set("n", "<leader>pd", module.toggle_word_diff, { desc = "[P]review [D]iff inline" })
+				vim.keymap.set("n", "<leader>pD", module.diffthis, { desc = "[P]review [D]iff" })
+			end,
+		})
 		--
-		-- 	add_plugin(gh("lewis6991/gitsigns.nvim"), "gitsigns", function()
-		-- 		local module = require("gitsigns")
-		--
-		-- 		module.setup({
-		-- 			signs = {
-		-- 				add = { text = "+" },
-		-- 				change = { text = "~" },
-		-- 				delete = { text = "_" },
-		-- 				topdelete = { text = "‾" },
-		-- 				changedelete = { text = "~" },
-		-- 			},
-		-- 			word_diff = false,
-		-- 		})
-		--
-		-- 		local toggleSigns = function()
-		-- 			local vim_status = vim.opt.signcolumn:get()
-		-- 			if vim_status == "yes" then
-		-- 				vim.opt.signcolumn = "no"
-		-- 				module.toggle_signs(false)
-		-- 			else
-		-- 				vim.opt.signcolumn = "yes"
-		-- 				module.toggle_signs(true)
-		-- 			end
-		-- 		end
-		--
-		-- 		vim.keymap.set("n", "<leader>ts", toggleSigns, { desc = "[T]oggle git [S]ings" })
-		--
-		-- 		-- show preview inside code of changed from last commit code
-		-- 		vim.keymap.set("n", "<leader>pq", module.preview_hunk_inline, { desc = "[P]review hunk" })
-		--
-		-- 		-- show panel on the left with history of git changes
-		-- 		vim.keymap.set("n", "<leader>pB", module.blame, { desc = "[P]review [B]lame panel" })
-		-- 		vim.keymap.set("n", "<leader>pb", module.blame_line, { desc = "[P]review [B]lame line" })
-		-- 		vim.keymap.set("n", "<leader>pd", module.toggle_word_diff, { desc = "[P]review [D]iff inline" })
-		-- 		vim.keymap.set("n", "<leader>pD", module.diffthis, { desc = "[P]review [D]iff" })
-		-- 	end)
-		--
-		-- 	add_plugin("folke/which-key.nvim", nil, {
-		-- 		delay = 500,
-		-- 		icons = {
-		-- 			mappings = vim.g.have_nerd_font,
-		-- 			keys = vim.g.have_nerd_font and {} or {
-		-- 				Up = "<Up> ",
-		-- 				Down = "<Down> ",
-		-- 				Left = "<Left> ",
-		-- 				Right = "<Right> ",
-		-- 				C = "<C-…> ",
-		-- 				M = "<M-…> ",
-		-- 				D = "<D-…> ",
-		-- 				S = "<S-…> ",
-		-- 				CR = "<CR> ",
-		-- 				Esc = "<Esc> ",
-		-- 				ScrollWheelDown = "<ScrollWheelDown> ",
-		-- 				ScrollWheelUp = "<ScrollWheelUp> ",
-		-- 				NL = "<NL> ",
-		-- 				BS = "<BS> ",
-		-- 				Space = "<Space> ",
-		-- 				Tab = "<Tab> ",
-		-- 				F1 = "<F1>",
-		-- 				F2 = "<F2>",
-		-- 				F3 = "<F3>",
-		-- 				F4 = "<F4>",
-		-- 				F5 = "<F5>",
-		-- 				F6 = "<F6>",
-		-- 				F7 = "<F7>",
-		-- 				F8 = "<F8>",
-		-- 				F9 = "<F9>",
-		-- 				F10 = "<F10>",
-		-- 				F11 = "<F11>",
-		-- 				F12 = "<F12>",
-		-- 			},
-		-- 		},
-		--
-		-- 		spec = {
-		-- 			{ "<leader>s", group = "[S]earch" },
-		-- 			{ "<leader>t", group = "[T]oggle" },
-		-- 			{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
-		-- 		},
-		--
-		-- 		win = {
-		-- 			no_overlap = true,
-		-- 			padding = { 0, 0 },
-		-- 			title = true,
-		-- 			title_pos = "center",
-		-- 			zindex = 1000,
-		-- 			border = "rounded",
-		-- 			bo = {},
-		-- 			wo = {},
-		-- 		},
-		-- 	})
+		man.add_plugin({
+			gh = "folke/which-key.nvim",
+			config = {
+				delay = 500,
+				icons = {
+					mappings = vim.g.have_nerd_font,
+					keys = vim.g.have_nerd_font and {} or {
+						Up = "<Up> ",
+						Down = "<Down> ",
+						Left = "<Left> ",
+						Right = "<Right> ",
+						C = "<C-…> ",
+						M = "<M-…> ",
+						D = "<D-…> ",
+						S = "<S-…> ",
+						CR = "<CR> ",
+						Esc = "<Esc> ",
+						ScrollWheelDown = "<ScrollWheelDown> ",
+						ScrollWheelUp = "<ScrollWheelUp> ",
+						NL = "<NL> ",
+						BS = "<BS> ",
+						Space = "<Space> ",
+						Tab = "<Tab> ",
+						F1 = "<F1>",
+						F2 = "<F2>",
+						F3 = "<F3>",
+						F4 = "<F4>",
+						F5 = "<F5>",
+						F6 = "<F6>",
+						F7 = "<F7>",
+						F8 = "<F8>",
+						F9 = "<F9>",
+						F10 = "<F10>",
+						F11 = "<F11>",
+						F12 = "<F12>",
+					},
+				},
+
+				spec = {
+					{ "<leader>s", group = "[S]earch" },
+					{ "<leader>t", group = "[T]oggle" },
+					{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+				},
+
+				win = {
+					no_overlap = true,
+					padding = { 0, 0 },
+					title = true,
+					title_pos = "center",
+					zindex = 1000,
+					border = "rounded",
+					bo = {},
+					wo = {},
+				},
+			},
+		})
+
+		man.add_plugin({ gh = "folke/todo-comments.nvim", config = { signs = false } })
+
+		man.add_plugin({ gh = "nvim-lua/plenary.nvim" })
+
+		man.add_plugin({
+			gh = "ThePrimeagen/harpoon",
+			branch = "harpoon2",
+			config = function()
+				local function switch_current_header_source()
+					local buf = vim.api.nvim_get_current_buf()
+
+					-- Clangd
+					local resp = vim.lsp.buf_request_sync(buf, "textDocument/switchSourceHeader", {
+						uri = vim.uri_from_bufnr(buf),
+					}, 50)
+
+					if resp == nil then
+						return
+					end
+
+					for _, data in pairs(resp) do
+						if data.result then
+							buf = vim.uri_to_bufnr(data.result) or vim.api.nvim_get_current_buf()
+							vim.api.nvim_set_current_buf(buf)
+						end
+					end
+				end
+
+				local harpoon = require("harpoon")
+
+				vim.keymap.set("n", "<leader>aa", function()
+					harpoon:list():add()
+				end, { desc = "Add to Harpoon" })
+
+				vim.keymap.set("n", "<leader>ad", function()
+					harpoon:list():remove()
+				end, {
+					desc = "Delete from Harpoon",
+				})
+
+				vim.keymap.set("n", "<leader>g", function()
+					harpoon.ui:toggle_quick_menu(harpoon:list())
+				end, {
+					desc = "Toggle Harpoon quick menu",
+				})
+
+				-- More smart switching logic for c/cpp files
+				local switch = function(item_idx)
+					-- If C++ or C -> Adding header <-> src files switch
+					-- So less amount of files need to be stored inside harpoon list. Only
+					-- headers can be stored
+					if vim.bo.filetype == "c" or vim.bo.filetype == "cpp" then
+						if item_idx > #harpoon:list().items then
+							return
+						end
+
+						local project_dir = harpoon:list().config:get_root_dir()
+						local after_path = harpoon:list():get(item_idx).value
+						local full_path = vim.fn.fnamemodify(project_dir .. "/" .. after_path, ":p")
+						local buf = vim.uri_to_bufnr(vim.uri_from_fname(full_path))
+						local current_buf = vim.api.nvim_get_current_buf()
+						-- If requesting buffer are the same as current:
+						-- 1. Go to <*.h> (header) file if <*.cpp> (src) file selected
+						-- 2. Viceversa
+						if buf == current_buf then
+							switch_current_header_source()
+						else
+							harpoon:list():select(item_idx)
+						end
+					else
+						harpoon:list():select(item_idx)
+					end
+				end
+
+				-- Adding select mappings
+				for i = 1, 6 do
+					local desc = "Select Harpoon buf " .. i
+					vim.keymap.set("n", "<leader>" .. i, function()
+						switch(i)
+					end, { desc = desc })
+				end
+
+				-- Adding special auto header-src switch for any bound/nonbound to harpoon
+				-- buf
+				-- Works only for buffers attached to c/cpp filetypes
+				vim.api.nvim_create_autocmd("FileType", {
+					pattern = { "c", "cpp" },
+					callback = function()
+						local opts = { noremap = true, silent = true, buffer = true }
+						vim.keymap.set("n", "<leader>0", function()
+							switch_current_header_source()
+						end, opts)
+					end,
+				})
+
+				-- Toggle previous & next buffers stored within Harpoon list
+				vim.keymap.set("n", "<A-TAB>", function()
+					harpoon:list():next()
+				end, {
+					desc = "Go next buffer via harpoon2",
+				})
+				vim.keymap.set("n", "<A-S-TAB>", function()
+					harpoon:list():prev()
+				end, {
+					desc = "Go prev buffer via harpoon2",
+				})
+			end,
+		})
+
+		man.apply()
 	end
-	--
-	-- add_plugin("folke/todo-comments.nvim", nil, { signs = false })
 end
