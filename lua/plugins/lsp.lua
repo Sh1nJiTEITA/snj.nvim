@@ -20,12 +20,12 @@ local function lsp_keymaps(bufnr)
 		end
 	end, "Smart Hover (LSP or DAP)")
 
+	map("gd", vim.lsp.buf.definition, "Definition")
 	map("grn", vim.lsp.buf.rename, "Rename")
 	map("gra", vim.lsp.buf.code_action, "Action")
 	map("grr", require("telescope.builtin").lsp_references, "References")
 	map("gri", require("telescope.builtin").lsp_implementations, "Implementation")
 	map("grd", require("telescope.builtin").lsp_definitions, "Definition")
-	map("gd", vim.lsp.buf.definition, "Definition")
 	map("gO", require("telescope.builtin").lsp_document_symbols, "Symbols")
 end
 
@@ -134,7 +134,6 @@ return {
 				},
 				pyright = { settings = { python = { analysis = { autoImportCompletions = true } } } },
 
-				vtsls = {},
 				vtsls = {
 					filetypes = {
 						"javascript",
