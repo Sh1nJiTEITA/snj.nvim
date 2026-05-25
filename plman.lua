@@ -1,4 +1,6 @@
 ---@class Metadata
+---@field url string | nil
+---@field file string | nil
 ---@field alias string | nil Optional alias for using with require
 ---@field config table | function | nil Optional setup parameters
 ---@field branch string | nil
@@ -75,18 +77,16 @@ local Man = {}
 ---@private
 Man.__index = Man
 
----@type table<string,Metadata>
+---@type table<string>
 ---@private
 Man._metadatas = {}
 
----@param url string
----@return boolean
-function Man.contains(url)
-	return Man._metadatas[url] ~= nil
-end
-
----@param meta UserMetadata
+---@param meta UserMetadata | string
 function Man.add_plugin(meta)
+	if meta.file ~= nil then
+		meta = require(meta.file)
+	end
+
 	local url = target_gh(meta.gh) or target_cb(meta.cb) or target_gl(meta.gl)
 
 	if url == nil then
@@ -94,41 +94,59 @@ function Man.add_plugin(meta)
 		return
 	end
 
+	meta.url = url
+
 	if meta.alias == nil then
 		local autoname = url:match(".*/(.*)$")
 		if autoname ~= nil then
 			meta.alias = autoname:gsub("%.nvim", "")
+		else
+			vim.notify('Cant generate autoname for plugin no url="' .. url .. '"', vim.log.levels.ERROR)
 		end
 	end
 
-	vim.notify('Installing plugin with name="' .. meta.alias .. '"', vim.log.levels.INFO)
+	vim.notify('Adding plugin with name="' .. meta.alias .. '"', vim.log.levels.INFO)
 
-	if not Man.contains(url) then
-		Man._metadatas[url] = meta
-	end
+	table.insert(Man._metadatas, meta)
 end
 
 ---@param meta Metadata
 local function apply_config(meta)
 	local tbl = meta.config
 
-	if type(tbl) == "function" then
-		tbl = tbl()
+	local setup = function(name, tbl)
+		local ok, plugin = pcall(require, meta.alias)
+
+		if not ok then
+			return
+		end
+
+		if type(plugin.setup) == "function" then
+			plugin.setup(tbl)
+		end
 	end
 
 	if type(tbl) == "table" then
-		require(meta.alias).setup(tbl)
+		--
+		setup(meta.alias, tbl)
+		--
+	elseif type(tbl) == "function" then
+		tbl = tbl()
+		if type(tbl) == "table" then
+			setup(meta.alias, tbl)
+		else
+		end
 	else
-		require(meta.alias).setup({})
+		setup(meta.alias, tbl)
 	end
 end
 
 function Man.apply()
 	local pack_sequance = {}
 
-	for url, meta in pairs(Man._metadatas) do
+	for _, meta in ipairs(Man._metadatas) do
 		table.insert(pack_sequance, {
-			src = url,
+			src = meta.url,
 			name = meta.alias,
 			version = meta.branch,
 		})
@@ -137,6 +155,7 @@ function Man.apply()
 	vim.pack.add(pack_sequance)
 
 	for _, meta in pairs(Man._metadatas) do
+		vim.notify('Enabling plugin with name="' .. meta.alias .. '"', vim.log.levels.INFO)
 		apply_config(meta)
 	end
 

@@ -132,29 +132,29 @@ end
 -------------------------------------------------------------------------------
 -- Diagnostic
 -------------------------------------------------------------------------------
-do
-	vim.diagnostic.config({
-		update_in_insert = false,
-		severity_sort = true,
-		float = { border = "rounded", source = "if_many" },
-		underline = { severity = { min = vim.diagnostic.severity.WARN } },
-
-		-- Can switch between these as you prefer
-		virtual_text = true, -- Text shows up at the end of the line
-		virtual_lines = false, -- Text shows up underneath the line, with virtual lines
-
-		-- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
-		jump = {
-			on_jump = function(_, bufnr)
-				vim.diagnostic.open_float({
-					bufnr = bufnr,
-					scope = "cursor",
-					focus = false,
-				})
-			end,
-		},
-	})
-end
+-- do
+-- 	vim.diagnostic.config({
+-- 		update_in_insert = false,
+-- 		severity_sort = true,
+-- 		float = { border = "rounded", source = "if_many" },
+-- 		underline = { severity = { min = vim.diagnostic.severity.WARN } },
+--
+-- 		-- Can switch between these as you prefer
+-- 		virtual_text = true, -- Text shows up at the end of the line
+-- 		virtual_lines = false, -- Text shows up underneath the line, with virtual lines
+--
+-- 		-- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
+-- 		jump = {
+-- 			on_jump = function(_, bufnr)
+-- 				vim.diagnostic.open_float({
+-- 					bufnr = bufnr,
+-- 					scope = "cursor",
+-- 					focus = false,
+-- 				})
+-- 			end,
+-- 		},
+-- 	})
+-- end
 
 -------------------------------------------------------------------------------
 -- Basic mappings
@@ -249,222 +249,34 @@ do
 		local man = require("plman")
 
 		man.add_plugin({ gh = "NMAC427/guess-indent.nvim" })
-		man.add_plugin({
-			gh = "folke/tokyonight.nvim",
-			alias = "tokyonight",
-			config = function()
-				require("tokyonight").setup({})
-				vim.cmd.colorscheme("tokyonight-night")
-			end,
-		})
-
 		man.add_plugin({ gh = "nvim-tree/nvim-web-devicons" })
 
-		man.add_plugin({
-			gh = "lewis6991/gitsigns.nvim",
-			config = function()
-				local module = require("gitsigns")
+		man.add_plugin({ file = "modules.gitsigns" })
+		man.add_plugin({ file = "modules.whichkey" })
 
-				module.setup({
-					signs = {
-						add = { text = "+" },
-						change = { text = "~" },
-						delete = { text = "_" },
-						topdelete = { text = "‾" },
-						changedelete = { text = "~" },
-					},
-					word_diff = false,
-				})
-
-				local toggleSigns = function()
-					local vim_status = vim.opt.signcolumn:get()
-					if vim_status == "yes" then
-						vim.opt.signcolumn = "no"
-						module.toggle_signs(false)
-					else
-						vim.opt.signcolumn = "yes"
-						module.toggle_signs(true)
-					end
-				end
-
-				vim.keymap.set("n", "<leader>ts", toggleSigns, { desc = "[T]oggle git [S]ings" })
-
-				-- show preview inside code of changed from last commit code
-				vim.keymap.set("n", "<leader>pq", module.preview_hunk_inline, { desc = "[P]review hunk" })
-
-				-- show panel on the left with history of git changes
-				vim.keymap.set("n", "<leader>pB", module.blame, { desc = "[P]review [B]lame panel" })
-				vim.keymap.set("n", "<leader>pb", module.blame_line, { desc = "[P]review [B]lame line" })
-				vim.keymap.set("n", "<leader>pd", module.toggle_word_diff, { desc = "[P]review [D]iff inline" })
-				vim.keymap.set("n", "<leader>pD", module.diffthis, { desc = "[P]review [D]iff" })
-			end,
-		})
-		--
-		man.add_plugin({
-			gh = "folke/which-key.nvim",
-			config = {
-				delay = 500,
-				icons = {
-					mappings = vim.g.have_nerd_font,
-					keys = vim.g.have_nerd_font and {} or {
-						Up = "<Up> ",
-						Down = "<Down> ",
-						Left = "<Left> ",
-						Right = "<Right> ",
-						C = "<C-…> ",
-						M = "<M-…> ",
-						D = "<D-…> ",
-						S = "<S-…> ",
-						CR = "<CR> ",
-						Esc = "<Esc> ",
-						ScrollWheelDown = "<ScrollWheelDown> ",
-						ScrollWheelUp = "<ScrollWheelUp> ",
-						NL = "<NL> ",
-						BS = "<BS> ",
-						Space = "<Space> ",
-						Tab = "<Tab> ",
-						F1 = "<F1>",
-						F2 = "<F2>",
-						F3 = "<F3>",
-						F4 = "<F4>",
-						F5 = "<F5>",
-						F6 = "<F6>",
-						F7 = "<F7>",
-						F8 = "<F8>",
-						F9 = "<F9>",
-						F10 = "<F10>",
-						F11 = "<F11>",
-						F12 = "<F12>",
-					},
-				},
-
-				spec = {
-					{ "<leader>s", group = "[S]earch" },
-					{ "<leader>t", group = "[T]oggle" },
-					{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
-				},
-
-				win = {
-					no_overlap = true,
-					padding = { 0, 0 },
-					title = true,
-					title_pos = "center",
-					zindex = 1000,
-					border = "rounded",
-					bo = {},
-					wo = {},
-				},
-			},
-		})
-
-		man.add_plugin({ gh = "folke/todo-comments.nvim", config = { signs = false } })
-
+		man.add_plugin({ gh = "folke/todo-comments.nvim" })
 		man.add_plugin({ gh = "nvim-lua/plenary.nvim" })
+		man.add_plugin({ file = "modules.harpoon" })
 
-		man.add_plugin({
-			gh = "ThePrimeagen/harpoon",
-			branch = "harpoon2",
-			config = function()
-				local function switch_current_header_source()
-					local buf = vim.api.nvim_get_current_buf()
+		man.add_plugin({ file = "modules.mini" })
 
-					-- Clangd
-					local resp = vim.lsp.buf_request_sync(buf, "textDocument/switchSourceHeader", {
-						uri = vim.uri_from_bufnr(buf),
-					}, 50)
+		man.add_plugin({ gh = "nvim-telescope/telescope-fzf-native.nvim" })
+		man.add_plugin({ gh = "nvim-telescope/telescope-ui-select.nvim" })
+		man.add_plugin({ file = "modules.telescope" })
 
-					if resp == nil then
-						return
-					end
+		man.add_plugin({ file = "modules.theme" })
 
-					for _, data in pairs(resp) do
-						if data.result then
-							buf = vim.uri_to_bufnr(data.result) or vim.api.nvim_get_current_buf()
-							vim.api.nvim_set_current_buf(buf)
-						end
-					end
-				end
+		man.add_plugin({ gh = "j-hui/fidget.nvim" })
 
-				local harpoon = require("harpoon")
+		man.add_plugin({ gh = "folke/lazydev.nvim" })
 
-				vim.keymap.set("n", "<leader>aa", function()
-					harpoon:list():add()
-				end, { desc = "Add to Harpoon" })
+		man.add_plugin({ gh = "williamboman/mason.nvim", config = {} })
+		man.add_plugin({ gh = "williamboman/mason-lspconfig.nvim" })
+		man.add_plugin({ gh = "WhoIsSethDaniel/mason-tool-installer.nvim", config = {} })
 
-				vim.keymap.set("n", "<leader>ad", function()
-					harpoon:list():remove()
-				end, {
-					desc = "Delete from Harpoon",
-				})
+		man.add_plugin({ file = "modules.lsp" })
 
-				vim.keymap.set("n", "<leader>g", function()
-					harpoon.ui:toggle_quick_menu(harpoon:list())
-				end, {
-					desc = "Toggle Harpoon quick menu",
-				})
-
-				-- More smart switching logic for c/cpp files
-				local switch = function(item_idx)
-					-- If C++ or C -> Adding header <-> src files switch
-					-- So less amount of files need to be stored inside harpoon list. Only
-					-- headers can be stored
-					if vim.bo.filetype == "c" or vim.bo.filetype == "cpp" then
-						if item_idx > #harpoon:list().items then
-							return
-						end
-
-						local project_dir = harpoon:list().config:get_root_dir()
-						local after_path = harpoon:list():get(item_idx).value
-						local full_path = vim.fn.fnamemodify(project_dir .. "/" .. after_path, ":p")
-						local buf = vim.uri_to_bufnr(vim.uri_from_fname(full_path))
-						local current_buf = vim.api.nvim_get_current_buf()
-						-- If requesting buffer are the same as current:
-						-- 1. Go to <*.h> (header) file if <*.cpp> (src) file selected
-						-- 2. Viceversa
-						if buf == current_buf then
-							switch_current_header_source()
-						else
-							harpoon:list():select(item_idx)
-						end
-					else
-						harpoon:list():select(item_idx)
-					end
-				end
-
-				-- Adding select mappings
-				for i = 1, 6 do
-					local desc = "Select Harpoon buf " .. i
-					vim.keymap.set("n", "<leader>" .. i, function()
-						switch(i)
-					end, { desc = desc })
-				end
-
-				-- Adding special auto header-src switch for any bound/nonbound to harpoon
-				-- buf
-				-- Works only for buffers attached to c/cpp filetypes
-				vim.api.nvim_create_autocmd("FileType", {
-					pattern = { "c", "cpp" },
-					callback = function()
-						local opts = { noremap = true, silent = true, buffer = true }
-						vim.keymap.set("n", "<leader>0", function()
-							switch_current_header_source()
-						end, opts)
-					end,
-				})
-
-				-- Toggle previous & next buffers stored within Harpoon list
-				vim.keymap.set("n", "<A-TAB>", function()
-					harpoon:list():next()
-				end, {
-					desc = "Go next buffer via harpoon2",
-				})
-				vim.keymap.set("n", "<A-S-TAB>", function()
-					harpoon:list():prev()
-				end, {
-					desc = "Go prev buffer via harpoon2",
-				})
-			end,
-		})
+		man.add_plugin({ file = "modules.blinkcmp" })
 
 		man.apply()
 	end
