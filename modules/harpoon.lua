@@ -1,6 +1,10 @@
 return {
 	gh = "ThePrimeagen/harpoon",
 	branch = "harpoon2",
+	deps = {
+		{ gh = "folke/todo-comments.nvim" },
+		{ gh = "nvim-lua/plenary.nvim" },
+	},
 	config = function()
 		local function switch_current_header_source()
 			local buf = vim.api.nvim_get_current_buf()

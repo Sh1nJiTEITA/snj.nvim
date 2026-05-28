@@ -1,5 +1,9 @@
 return {
 	gh = "nvim-telescope/telescope.nvim",
+	deps = {
+		{ gh = "nvim-telescope/telescope-fzf-native.nvim" },
+		{ gh = "nvim-telescope/telescope-ui-select.nvim" },
+	},
 	config = function()
 		require("telescope").setup({
 			extensions = {

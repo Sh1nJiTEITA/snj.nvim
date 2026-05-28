@@ -107,6 +107,11 @@ end
 
 return {
 	gh = "neovim/nvim-lspconfig",
+	deps = {
+		{ gh = "williamboman/mason.nvim", config = {} },
+		{ gh = "williamboman/mason-lspconfig.nvim" },
+		{ gh = "WhoIsSethDaniel/mason-tool-installer.nvim", config = {} },
+	},
 	config = function()
 		setup_lsp_attach()
 		setup_diagnostics()

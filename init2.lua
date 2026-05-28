@@ -248,35 +248,25 @@ do
 	do
 		local man = require("plman")
 
+		man.add_plugin({ gh = "danymat/neogen" })
 		man.add_plugin({ gh = "NMAC427/guess-indent.nvim" })
 		man.add_plugin({ gh = "nvim-tree/nvim-web-devicons" })
+		man.add_plugin({ gh = "j-hui/fidget.nvim" })
+		man.add_plugin({ gh = "folke/lazydev.nvim" })
 
 		man.add_plugin({ file = "modules.gitsigns" })
 		man.add_plugin({ file = "modules.whichkey" })
-
-		man.add_plugin({ gh = "folke/todo-comments.nvim" })
-		man.add_plugin({ gh = "nvim-lua/plenary.nvim" })
 		man.add_plugin({ file = "modules.harpoon" })
 
 		man.add_plugin({ file = "modules.mini" })
-
-		man.add_plugin({ gh = "nvim-telescope/telescope-fzf-native.nvim" })
-		man.add_plugin({ gh = "nvim-telescope/telescope-ui-select.nvim" })
 		man.add_plugin({ file = "modules.telescope" })
-
 		man.add_plugin({ file = "modules.theme" })
 
-		man.add_plugin({ gh = "j-hui/fidget.nvim" })
-
-		man.add_plugin({ gh = "folke/lazydev.nvim" })
-
-		man.add_plugin({ gh = "williamboman/mason.nvim", config = {} })
-		man.add_plugin({ gh = "williamboman/mason-lspconfig.nvim" })
-		man.add_plugin({ gh = "WhoIsSethDaniel/mason-tool-installer.nvim", config = {} })
-
 		man.add_plugin({ file = "modules.lsp" })
-
 		man.add_plugin({ file = "modules.blinkcmp" })
+		man.add_plugin({ file = "modules.conform" })
+		man.add_plugin({ file = "modules.treesitter" })
+		man.add_plugin({ file = "modules.dap" })
 
 		man.apply()
 	end
