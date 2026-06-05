@@ -77,10 +77,10 @@ local setup_diagnostics = function()
 		virtual_lines = false, -- Text shows up underneath the line, with virtual lines
 		signs = {
 			text = {
-				[vim.diagnostic.severity.ERROR] = "󰅚 ",
-				[vim.diagnostic.severity.WARN] = "󰀪 ",
-				[vim.diagnostic.severity.INFO] = "󰋽 ",
-				[vim.diagnostic.severity.HINT] = "󰌶 ",
+				[vim.diagnostic.severity.ERROR] = "E",
+				[vim.diagnostic.severity.WARN] = "W",
+				[vim.diagnostic.severity.INFO] = "I",
+				[vim.diagnostic.severity.HINT] = "H",
 			},
 		},
 		jump = {
