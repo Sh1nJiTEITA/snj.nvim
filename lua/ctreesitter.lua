@@ -65,8 +65,15 @@ return {
 			"comment",
 			"cpp",
 			"doxygen",
+
+			"javascript",
+			"typescript",
+			"tsx",
+			"css",
 		}
 
 		module.install(parsers)
+
+		add_attach_cmd()
 	end,
 }
