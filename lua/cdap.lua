@@ -24,6 +24,26 @@ local function pick_binary(cb)
 	})
 end
 
+local function pick_with_ext(ext, cb)
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+
+	require("telescope.builtin").find_files({
+		prompt_title = "Select Executable",
+		find_command = { "fd", "--hidden", "--no-ignore", "-e", ext },
+		previewer = false,
+		attach_mappings = function(prompt_bufnr, _)
+			actions.select_default:replace(function()
+				local selection = action_state.get_selected_entry()
+				actions.close(prompt_bufnr)
+				cached_binary = selection[1]
+				cb(cached_binary)
+			end)
+			return true
+		end,
+	})
+end
+
 local function map(mode, lhs, rhs, desc)
 	vim.keymap.set(mode, lhs, rhs, { desc = desc, silent = true })
 end
@@ -78,7 +98,6 @@ local function setup_ui(dapui)
 				size = 15,
 				elements = {
 					{ id = "repl", size = 0.5 },
-					{ id = "console", size = 0.5 },
 				},
 			},
 		},
@@ -99,45 +118,87 @@ local function setup_listeners(dap, dapui)
 end
 
 local function setup_adapters(dap)
-	dap.adapters.gdb = {
-		type = "executable",
-		command = "gdb",
-		args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
+	dap.adapters = {
+		gdb = {
+			type = "executable",
+			command = "gdb",
+			args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
+		},
+		debugpy = {
+			type = "executable",
+			command = "python3",
+			args = { "-m", "debugpy.adapter" },
+		},
 	}
 end
 
 local function setup_configurations(dap)
-	dap.configurations.cpp = {
-		{
-			name = "Launch",
-			type = "gdb",
-			request = "launch",
-			program = function()
-				return coroutine.create(function(coro)
-					if cached_binary then
-						coroutine.resume(coro, cached_binary)
-					else
-						pick_binary(function(path)
-							coroutine.resume(coro, path)
-						end)
+	dap.configurations = {
+		cpp = {
+			{
+				name = "Launch",
+				type = "gdb",
+				request = "launch",
+				program = function()
+					return coroutine.create(function(coro)
+						if cached_binary then
+							coroutine.resume(coro, cached_binary)
+						else
+							pick_binary(function(path)
+								coroutine.resume(coro, path)
+							end)
+						end
+					end)
+				end,
+				args = function()
+					if cached_args then
+						return cached_args
 					end
-				end)
-			end,
-			args = function()
-				if cached_args then
-					return cached_args
-				end
 
-				local args_string = vim.fn.input("Arguments: ")
-				if args_string == "" then
-					cached_args = {}
-				else
-					cached_args = vim.split(args_string, "%s+")
-				end
-				return cached_args
-			end,
-			cwd = "${workspaceFolder}",
-			stopAtBeginningOfMainSubprogram = true,
+					local args_string = vim.fn.input("Arguments: ")
+					if args_string == "" then
+						cached_args = {}
+					else
+						cached_args = vim.split(args_string, "%s+")
+					end
+					return cached_args
+				end,
+				cwd = "${workspaceFolder}",
+				stopAtBeginningOfMainSubprogram = true,
+			},
+		},
+		python = {
+			{
+				name = "Launch",
+				type = "debugpy",
+				request = "launch",
+				program = function()
+					return coroutine.create(function(coro)
+						if cached_binary then
+							coroutine.resume(coro, cached_binary)
+						else
+							pick_with_ext("py", function(path)
+								coroutine.resume(coro, path)
+							end)
+						end
+					end)
+				end,
+				args = function()
+					if cached_args then
+						return cached_args
+					end
+
+					local args_string = vim.fn.input("Arguments: ")
+					if args_string == "" then
+						cached_args = {}
+					else
+						cached_args = vim.split(args_string, "%s+")
+					end
+					return cached_args
+				end,
+				cwd = "${workspaceFolder}",
+				stopAtBeginningOfMainSubprogram = true,
+			},
 		},
 	}
 end
