@@ -220,12 +220,12 @@ do
 	do
 		local man = require("plman")
 
-		man.add_plugin({ gh = "danymat/neogen" })
 		man.add_plugin({ gh = "NMAC427/guess-indent.nvim" })
 		man.add_plugin({ gh = "nvim-tree/nvim-web-devicons" })
 		man.add_plugin({ gh = "j-hui/fidget.nvim" })
 		man.add_plugin({ gh = "folke/lazydev.nvim" })
 
+		man.add_plugin({ file = "cneogen" })
 		man.add_plugin({ file = "cgitsigns" })
 		man.add_plugin({ file = "cwhichkey" })
 		man.add_plugin({ file = "charpoon" })
