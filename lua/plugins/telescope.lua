@@ -63,13 +63,6 @@ local function init_telescope_keymaps(builtin)
 						actions.close(prompt_bufnr)
 					end
 				end)
-				map("n", "<C-x>", function()
-					local selection = require("telescope.actions.state").get_selected_entry()
-					if selection then
-						vim.cmd("bdelete " .. selection.value)
-						actions.close(prompt_bufnr)
-					end
-				end)
 				return true
 			end,
 		})
