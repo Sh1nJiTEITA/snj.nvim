@@ -3,7 +3,6 @@
 --
 -- :help '<any setting>'
 --
-
 do
 	vim.loader.enable()
 
@@ -240,6 +239,9 @@ do
 		man.add_plugin({ file = "cconform" })
 		man.add_plugin({ file = "ctreesitter" })
 		man.add_plugin({ file = "cdap" })
+
+		man.add_plugin({ file = "cjupynium" })
+		man.add_plugin({ file = "cneotree" })
 
 		man.apply()
 	end
