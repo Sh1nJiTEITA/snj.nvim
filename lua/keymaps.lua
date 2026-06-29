@@ -3,19 +3,19 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, {
-   desc = "Go to previous [D]iagnostic message",
+	desc = "Go to previous [D]iagnostic message",
 })
 
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, {
-   desc = "Go to next [D]iagnostic message",
+	desc = "Go to next [D]iagnostic message",
 })
 
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, {
-   desc = "Show diagnostic [E]rror messages",
+	desc = "Show diagnostic [E]rror messages",
 })
 
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, {
-   desc = "Open diagnostic [Q]uickfix list",
+	desc = "Open diagnostic [Q]uickfix list",
 })
 
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
@@ -40,3 +40,6 @@ vim.api.nvim_create_user_command("WQa", "wqa", {})
 vim.api.nvim_create_user_command("WQA", "wqa", {})
 vim.api.nvim_create_user_command("Wa", "wa", {})
 vim.api.nvim_create_user_command("WA", "wa", {})
+
+vim.keymap.set("n", "(", "vipo<esc>", { silent = true, desc = "Move to first line of paragraph" })
+vim.keymap.set("n", ")", "vip<esc>", { silent = true, desc = "Move to last line of paragraph" })

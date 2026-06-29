@@ -37,7 +37,9 @@ return {
 		"kiyoon/jupynium.nvim",
 		-- build = "sudo pacman -S python-jupynium", -- FIXME: Not working on ARCH
 		config = function()
-			require("jupynium").setup({})
+			require("jupynium").setup({
+				auto_download_ipynb = false,
+			})
 			vim.keymap.set("n", "<leader>jr", function()
 				vim.cmd("JupyniumStartAndAttachToServer")
 			end, { desc = "[j]upynium sta[r]t" })
