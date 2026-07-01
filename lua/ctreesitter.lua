@@ -70,6 +70,8 @@ return {
 			"typescript",
 			"tsx",
 			"css",
+			"json",
+			"sql",
 		}
 
 		module.install(parsers)
