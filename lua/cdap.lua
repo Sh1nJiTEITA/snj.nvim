@@ -122,7 +122,13 @@ local function setup_adapters(dap)
 		gdb = {
 			type = "executable",
 			command = "gdb",
-			args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
+			args = {
+				"--interpreter=dap",
+				"--eval-command",
+				"set print pretty on",
+				"--eval-command",
+				"source ~/.config/nvim/scripts/nlohmann-json.py",
+			},
 		},
 		debugpy = {
 			type = "executable",
