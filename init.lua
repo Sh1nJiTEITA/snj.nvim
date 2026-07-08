@@ -223,6 +223,7 @@ do
 		man.add_plugin({ gh = "nvim-tree/nvim-web-devicons" })
 		man.add_plugin({ gh = "j-hui/fidget.nvim" })
 		man.add_plugin({ gh = "folke/lazydev.nvim" })
+		man.add_plugin({ gh = "sainnhe/gruvbox-material" })
 
 		man.add_plugin({ file = "cneogen" })
 		man.add_plugin({ file = "cgitsigns" })
