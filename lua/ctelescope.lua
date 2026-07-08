@@ -68,6 +68,12 @@ return {
 			desc = "[ ] Find existing buffers",
 		})
 
+		vim.keymap.set("n", "<leader>st", function()
+			builtin.colorscheme({ enable_preview = true })
+		end, {
+			desc = "[S]earch [C]olorschemes",
+		})
+
 		vim.keymap.set("n", "<leader>s/", function()
 			builtin.live_grep({
 				grep_open_files = true,
