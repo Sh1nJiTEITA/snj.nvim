@@ -65,7 +65,8 @@ return {
 			"comment",
 			"cpp",
 			"doxygen",
-
+			"sql",
+			"json",
 			"javascript",
 			"typescript",
 			"tsx",
