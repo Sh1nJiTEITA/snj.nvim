@@ -46,6 +46,9 @@ end
 
 return {
 	gh = "nvim-treesitter/nvim-treesitter",
+	deps = {
+		{ gh = "aklt/plantuml-syntax" },
+	},
 	version = "main",
 	config = function()
 		local module = require("nvim-treesitter")

@@ -230,6 +230,7 @@ local function setup_global_keymaps(dap, dapui)
 
 	-- UI & Evaluation
 	map("n", "<leader>dh", dapui.eval, "Debug: Hover (Eval)")
+	map("n", "K", dapui.eval, "Debug: Hover (Eval)")
 	map("n", "<leader>dE", dap.repl.open, "Debug: Open REPL")
 	map("n", "<leader>du", dapui.toggle, "Debug: Toggle UI")
 	map("n", "<leader>ds", function()
@@ -309,22 +310,22 @@ return {
 	deps = {
 		{ gh = "rcarriga/nvim-dap-ui", alias = "dapui", config = false },
 		{ gh = "nvim-neotest/nvim-nio", alias = "nio", config = false },
-		-- {
-		-- 	gh = "m00qek/baleia.nvim",
-		-- 	config = function()
-		-- 		local baleia = require("baleia").setup({
-		-- 			-- Optional: You can customize colors here if your theme needs it
-		-- 		})
-		--
-		-- 		-- Automatically strip ANSI and apply colors to dap-ui buffers
-		-- 		vim.api.nvim_create_autocmd("FileType", {
-		-- 			pattern = { "dap-repl", "dapui_console" },
-		-- 			callback = function(args)
-		-- 				baleia.automatically(args.buf)
-		-- 			end,
-		-- 		})
-		-- 	end,
-		-- },
+		{
+			gh = "m00qek/baleia.nvim",
+			config = function()
+				local baleia = require("baleia").setup({
+					-- Optional: You can customize colors here if your theme needs it
+				})
+
+				-- Automatically strip ANSI and apply colors to dap-ui buffers
+				vim.api.nvim_create_autocmd("FileType", {
+					pattern = { "dap-repl", "dapui_console" },
+					callback = function(args)
+						baleia.automatically(args.buf)
+					end,
+				})
+			end,
+		},
 	},
 	config = function()
 		local dap = require("dap")

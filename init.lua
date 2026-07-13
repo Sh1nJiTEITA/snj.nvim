@@ -126,6 +126,29 @@ do
 	vim.o.colorcolumn = "80"
 
 	vim.o.packpath = vim.o.packpath
+
+	-- Ask gnome desktop if it is set and what theme (dark || light) it wants
+	do
+		vim.o.background = "dark"
+
+		local gnome_query = "gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null"
+		local handle = io.popen(gnome_query)
+		local result = handle and handle:read("*a") or ""
+
+		if handle then
+			handle:close()
+		end
+
+		result = result:gsub("%s+", "")
+
+		-- Only change to light if gsettings successfully returns the light mode string
+		-- (In GNOME/GTK, 'default' usually means light mode)
+		if result == "'default'" or result == "'prefer-light'" then
+			vim.o.background = "light"
+		elseif result == "'prefer-dark'" then
+			vim.o.background = "dark"
+		end
+	end
 end
 -------------------------------------------------------------------------------
 -- Basic mappings

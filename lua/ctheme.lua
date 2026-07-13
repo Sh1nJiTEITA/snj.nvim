@@ -2,6 +2,8 @@ return {
 	gh = "rose-pine/neovim",
 	alias = "rose-pine",
 	config = function()
+		-- 1. Query the system for the current GTK color scheme
+
 		require("rose-pine").setup({
 			variant = "auto", -- auto, main, moon, or dawn
 			dark_variant = "main", -- main, moon, or dawn
