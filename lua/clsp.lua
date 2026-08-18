@@ -1,5 +1,5 @@
 local map = function(keys, func, desc)
-	vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
+	vim.keymap.set("n", keys, func, { desc = "LSP: " .. desc })
 end
 
 local setup_lsp_keymaps = function(bufnr)
@@ -11,6 +11,25 @@ local setup_lsp_keymaps = function(bufnr)
 			vim.lsp.buf.hover({ border = "rounded" })
 		end
 	end, "Smart Hover (LSP or DAP)")
+
+	map("<leader>lr", function()
+		local clients = vim.lsp.get_clients({ bufnr = 0 })
+		if #clients == 0 then
+			vim.notify("No LSP clients attached", vim.log.levels.WARN)
+			return
+		end
+		local names = {}
+		for _, c in ipairs(clients) do
+			table.insert(names, c.name)
+			vim.lsp.enable(c.name, false)
+		end
+		vim.defer_fn(function()
+			for _, name in ipairs(names) do
+				vim.lsp.enable(name)
+			end
+			vim.notify("Restarted: " .. table.concat(names, ", "))
+		end, 500)
+	end, "[L]SP [R]estart")
 
 	map("gd", vim.lsp.buf.definition, "Definition")
 	map("grn", vim.lsp.buf.rename, "Rename")
@@ -105,6 +124,17 @@ local setup_servers = function(servers)
 	end
 end
 
+local function python_path(root)
+	if vim.env.VIRTUAL_ENV then
+		return vim.env.VIRTUAL_ENV .. "/bin/python"
+	end
+	local out = vim.system({ "poetry", "env", "info", "--path" }, { cwd = root, text = true }):wait()
+	if out.code == 0 then
+		return vim.trim(out.stdout) .. "/bin/python"
+	end
+	return "python3"
+end
+
 return {
 	gh = "neovim/nvim-lspconfig",
 	deps = {
@@ -144,6 +174,22 @@ return {
 							-- Make the server aware of Neovim runtime files
 							library = vim.api.nvim_get_runtime_file("", true),
 							checkThirdParty = false,
+						},
+					},
+				},
+			},
+			basedpyright = {
+				before_init = function(_, config)
+					config.settings = config.settings or {}
+					config.settings.python = config.settings.python or {}
+					config.settings.python.pythonPath = python_path(config.root_dir)
+				end,
+				settings = {
+					basedpyright = {
+						analysis = {
+							diagnosticMode = "workspace",
+							typeCheckingMode = "standard",
+							useLibraryCodeForTypes = true,
 						},
 					},
 				},
