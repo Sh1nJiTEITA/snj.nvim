@@ -108,7 +108,7 @@ do
 	-- 		:syn-cchar).
 	--
 	-- 3	Concealed text is completely hidden.
-	vim.o.conceallevel = 1
+	vim.o.conceallevel = 0
 
 	-- Change tabs to spaces
 	vim.o.expandtab = true
@@ -263,9 +263,11 @@ do
 		man.add_plugin({ file = "cconform" })
 		man.add_plugin({ file = "ctreesitter" })
 		man.add_plugin({ file = "cdap" })
+		man.add_plugin({ file = "cluasnip" })
 
 		man.add_plugin({ file = "cjupynium" })
 		man.add_plugin({ file = "cneotree" })
+		man.add_plugin({ file = "ccsv" })
 
 		man.apply()
 	end
