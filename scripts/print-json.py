@@ -42,17 +42,29 @@ class PrintJson(gdb.Command):
 
         candidates = []
         if is_json:
+            # Extract the versioned namespace prefix, e.g. "nlohmann::json_abi_v3_11_3"
+            prefix = type_name.split("::basic_json")[0]
+            error_handler = f"{prefix}::detail::error_handler_t::strict"
+
             candidates += [
-                f"({arg}).dump().c_str()",
-                f"({arg}).dump(-1, ' ', false).c_str()",
-                f"({arg}).dump(2).c_str()",
+                f"({arg}).dump(-1, ' ', false, {error_handler}).c_str()",
+                f"({arg}).dump(2, ' ', false, {error_handler}).c_str()",
+                # fallback: cast enum value 0 (strict) directly by integer if the
+                # fully-qualified name above doesn't resolve for some reason
+                f"({arg}).dump(-1, ' ', false, ({prefix}::detail::error_handler_t)0).c_str()",
             ]
         candidates.append(f"({arg}).c_str()")
 
         for expr in candidates:
-            s = self._try(expr)
-            if s is not None:
-                return s
+            try:
+                result = gdb.parse_and_eval(expr)
+                return (
+                    result.string()
+                    if result.type.code == gdb.TYPE_CODE_PTR
+                    else str(result)
+                )
+            except Exception as e:
+                print(f"  [debug] '{expr}' failed: {e}")
 
         print(
             "Warning: none of dump()/c_str() call variants worked;"

@@ -1,3 +1,92 @@
+-- NOTE: ai
+-- =====================================================================
+-- FLOATING JSON VIEWER (runs `pjson <expr>` and shows result in a float)
+-- =====================================================================
+local function show_json_float(dap)
+	local session = dap.session()
+	if not session then
+		vim.notify("No active debug session.", vim.log.levels.WARN)
+		return
+	end
+
+	local default_expr = vim.fn.expand("<cword>")
+	local expr = vim.fn.input("pjson expression: ", default_expr)
+	if expr == "" then
+		return
+	end
+
+	local captured = {}
+
+	-- Temporarily hook into output events to capture console text
+	-- (our python `pjson` command uses print(), which surfaces as
+	-- "console" category output events, not as an evaluate `result`)
+	local listener_id = "json_float_capture"
+	dap.listeners.on.event_output[listener_id] = function(_, body)
+		if body.category == "console" or body.category == "stdout" then
+			for line in (body.output or ""):gmatch("([^\n]*)\n?") do
+				if line ~= "" then
+					table.insert(captured, line)
+				end
+			end
+		end
+	end
+
+	session:request("evaluate", {
+		expression = "pjson " .. expr,
+		context = "repl",
+	}, function(err, resp)
+		-- unhook regardless of outcome
+		dap.listeners.on.event_output[listener_id] = nil
+
+		vim.schedule(function()
+			if err then
+				vim.notify("Error running pjson: " .. vim.inspect(err), vim.log.levels.ERROR)
+				return
+			end
+
+			-- Some gdb-dap builds also put text directly in resp.result
+			if resp and resp.result and resp.result ~= "" then
+				for line in resp.result:gmatch("([^\n]*)\n?") do
+					if line ~= "" then
+						table.insert(captured, line)
+					end
+				end
+			end
+
+			if #captured == 0 then
+				table.insert(captured, "(no output captured)")
+			end
+
+			-- Build floating window
+			local buf = vim.api.nvim_create_buf(false, true)
+			vim.api.nvim_buf_set_lines(buf, 0, -1, false, captured)
+			vim.bo[buf].filetype = "json"
+			vim.bo[buf].bufhidden = "wipe"
+			vim.bo[buf].modifiable = false
+
+			local width = math.floor(vim.o.columns * 0.7)
+			local height = math.floor(vim.o.lines * 0.7)
+			local win = vim.api.nvim_open_win(buf, true, {
+				relative = "editor",
+				width = width,
+				height = height,
+				row = math.floor((vim.o.lines - height) / 2),
+				col = math.floor((vim.o.columns - width) / 2),
+				border = "rounded",
+				title = " pjson: " .. expr .. " ",
+				title_pos = "center",
+			})
+
+			vim.wo[win].wrap = false
+			vim.wo[win].cursorline = true
+
+			-- Close on q or <Esc>
+			vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = buf, silent = true })
+			vim.keymap.set("n", "<Esc>", "<cmd>close<CR>", { buffer = buf, silent = true })
+		end)
+	end)
+end
+
 -- =====================================================================
 -- STATE & HELPERS
 -- =====================================================================
@@ -56,8 +145,8 @@ local function enable_gdb_keys(dap)
 	map("n", "s", dap.step_into, "Debug: Step (Step Into)")
 	map("n", "f", dap.step_out, "Debug: Finish (Step Out)")
 	map("n", "c", dap.continue, "Debug: Continue")
-	map("n", "u", dap.up, "Debug: Up Stack")
-	map("n", "d", dap.down, "Debug: Down Stack")
+	map("n", "U", dap.up, "Debug: Up Stack")
+	map("n", "D", dap.down, "Debug: Down Stack")
 end
 
 local function disable_gdb_keys()
@@ -65,8 +154,8 @@ local function disable_gdb_keys()
 	pcall(vim.keymap.del, "n", "s")
 	pcall(vim.keymap.del, "n", "f")
 	pcall(vim.keymap.del, "n", "c")
-	pcall(vim.keymap.del, "n", "u")
-	pcall(vim.keymap.del, "n", "d")
+	pcall(vim.keymap.del, "n", "U")
+	pcall(vim.keymap.del, "n", "D")
 end
 
 -- =====================================================================
@@ -86,18 +175,20 @@ local function setup_ui(dapui)
 		layouts = {
 			{
 				position = "left",
-				size = 50,
+				size = 40, -- Use an integer like 40 for columns, or a decimal like 0.2 for 20% width
 				elements = {
-					{ id = "breakpoints", size = 0.1 },
-					{ id = "scopes", size = 0.3 },
-					{ id = "watches", size = 0.6 },
+					-- These must add up to exactly 1.0
+					{ id = "breakpoints", size = 0.2 },
+					{ id = "scopes", size = 0.4 },
+					{ id = "watches", size = 0.4 },
 				},
 			},
 			{
 				position = "bottom",
-				size = 15,
+				size = 15, -- 15 lines tall
 				elements = {
-					{ id = "repl", size = 0.5 },
+					-- Because this is the only element, it must take up 100% (1.0) of the panel
+					{ id = "repl", size = 1.0 },
 				},
 			},
 		},
@@ -124,10 +215,18 @@ local function setup_adapters(dap)
 			command = "gdb",
 			args = {
 				"--interpreter=dap",
+
 				"--eval-command",
 				"set print pretty on",
+
+				"--eval-command",
+				"set print elements 0",
+
 				"--eval-command",
 				"source ~/.config/nvim/scripts/nlohmann-json.py",
+
+				"--eval-command",
+				"source ~/.config/nvim/scripts/print-json.py",
 			},
 		},
 		debugpy = {
@@ -272,6 +371,10 @@ local function setup_global_keymaps(dap, dapui)
 			print("Modification cancelled. Args unchanged.")
 		end
 	end, "Debug: Modify Current Args")
+
+	map("n", "<leader>dj", function()
+		show_json_float(dap)
+	end, "Debug: Show pjson Output (Floating)")
 
 	map("n", "<leader>dw", function()
 		local session = dap.session()
