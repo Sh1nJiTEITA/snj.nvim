@@ -11,11 +11,13 @@ return {
 		},
 	},
 	config = function()
+		local module = require("conform")
+
 		vim.keymap.set("n", "<leader>f", function()
-			require("conform").format({ async = true, lsp_format = "fallback" })
+			module.format({ async = true, lsp_format = "fallback" })
 		end, { desc = "[F]ormat buffer" })
 
-		return {
+		module.setup({
 			notify_on_error = false,
 			format_on_save = function(bufnr)
 				-- Disable "format_on_save lsp_fallback" for languages that don't
@@ -39,12 +41,15 @@ return {
 					"ruff_fix",
 					"ruff_format",
 				},
+				cmake = { "cmake_format" },
 				yaml = { "yamlfix" },
 				json = { "fixjson" },
 				sh = { "shfmt" },
 				zsh = { "shfmt" },
 				bash = { "shfmt" },
+				md = { "mdformat" },
+				markdown = { "mdformat" },
 			},
-		}
+		})
 	end,
 }
